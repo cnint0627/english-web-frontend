@@ -18,7 +18,9 @@
 </template>
 
 <script>
-import axios from 'axios';
+import cookie from 'vue-cookie';
+import {postAction} from "@/api/action";
+import router from "@/router";
 
 export default {
   name:'loginPage',
@@ -37,13 +39,14 @@ export default {
   },
   methods: {
     login() {
-      axios.post('http://203.57.227.253:8888/user/login', this.loginData)
+      postAction('user/login', this.loginData)
         .then(response => {
           console.log(response);
           // Redirect to dashboard or desired page
-          if(response.data.data){
-            console.log(response.data.data)
-            this.$router.push({path:'/reading',params: { token: response.data.data }});
+          if(response.data){
+            console.log(response.data)
+            cookie.set("token", response.data);
+            router.push({path:'/reading'});
           }else{
             this.errorMessage = 'Login failed. Please try again.';
           }
@@ -55,9 +58,7 @@ export default {
         });
     },
     register() {
-  // axios.get(`http://203.57.227.253:8888/user/getByUsername=${this.registerData.username}`)
-
-        axios.post('http://203.57.227.253:8888/user/register', this.loginData)
+        postAction('user/register', this.loginData)
           .then(response => {
             console.log(response);
             // this.$router.push('/dashboard');
