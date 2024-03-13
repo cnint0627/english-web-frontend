@@ -1,55 +1,29 @@
 <template>
-    <div id="app">
-        <div class="content">
-            <router-view></router-view>
-        </div>
-    </div>
+  <div id="app">
+    <Navigation /> <!-- 使用导航栏组件 -->
+    <router-view /> <!-- 这里会根据路由显示不同的页面 -->
+  </div>
 </template>
- 
+
 <script>
-    export default {
-        name: 'App'
-    }
+import Navigation from "@/components/Navigation.vue"; // 导入导航栏组件
+
+export default {
+  name: "App",
+  components: {
+    Navigation, // 注册导航栏组件
+  },
+};
 </script>
- 
+
 <style>
-    #app{
-        position: fixed;
-        top:0;
-        left:0;
-        right:0;
-        bottom:0;
-        background: skyblue;
-    }
-    ul{
-        display: flex;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right:0;
-        height:60px;
-        border-top:1px solid #999;
- 
-    }
-    li{
-        flex:1;
-        background: #eee;
-        border-right:1px solid #999;
-    }
-    a{
-        display:block;
-        line-height:60px;
-        text-align: center;
-        font-size:20px;
-        text-decoration: none;
-    }
- 
-    .content{
-        position: fixed;
-        top:0;
-        left:0;
-        right:0;
-        bottom:61px;
- 
-    }
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 100px;
+
+}
 </style>

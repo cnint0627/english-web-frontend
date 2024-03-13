@@ -7,7 +7,7 @@ import cookie from 'vue-cookie';
     每次进行http请求时不需要手动获取，请求头便可带上token
  */
 
-const host = "http://203.57.227.253:8888/"
+const host = "http://localhost:8888"
 
 // get请求
 export function getAction(url){

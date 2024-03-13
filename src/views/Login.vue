@@ -23,7 +23,7 @@ import {postAction} from "@/api/action";
 import router from "@/router";
 
 export default {
-  name:'loginPage',
+  name:'Login',
   data() {
     return {
       loginData: {
@@ -39,14 +39,14 @@ export default {
   },
   methods: {
     login() {
-      postAction('user/login', this.loginData)
+      postAction('/user/login', this.loginData)
         .then(response => {
           console.log(response);
           // Redirect to dashboard or desired page
           if(response.data){
             console.log(response.data)
-            cookie.set("token", response.data);
-            router.push({path:'/reading'});
+            cookie.set("token", response.data, 1);
+            router.push({path:'/home'});
           }else{
             this.errorMessage = 'Login failed. Please try again.';
           }
@@ -58,7 +58,7 @@ export default {
         });
     },
     register() {
-        postAction('user/register', this.loginData)
+        postAction('/user/register', this.loginData)
           .then(response => {
             console.log(response);
             // this.$router.push('/dashboard');
