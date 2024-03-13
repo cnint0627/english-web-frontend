@@ -5,13 +5,25 @@
     <div id="content">{{ record.content }}</div>
     <div id="question" v-for="(question,q_index) in record.questions" v-bind:key="question">
       问题 {{q_index+1}} : {{question.title}}
-      <a-radio-group id="option-container" v-model="answerRecord[q_index]">
-        <a-radio id="option" v-for="(option,o_index) in question.options" v-bind:key="option" :value="o_index">
+      <a-radio-group id="option" v-model="myAnswerRecord[q_index]" v-if="!isSubmited">
+        <a-radio v-for="(option,o_index) in question.options" v-bind:key="option" :value="o_index">
+          选项 {{o_index+1}} : {{option.content}}
+        </a-radio>
+      </a-radio-group>
+      <a-radio-group id="option" v-model="myAnswerRecord[q_index]" v-if="isSubmited" readonly>
+        <a-radio
+            :style="(o_index==myAnswerRecord[q_index]?(submitAnswerRecord[q_index].isCorrect?'color:yellowgreen;':'color:red;'):'')+
+                    (o_index==submitAnswerRecord[q_index].answer?'color:yellowgreen;':'')"
+            v-for="(option,o_index) in question.options"
+            v-bind:key="option"
+            :value="o_index"
+            onClick='javascript:return false'
+        >
           选项 {{o_index+1}} : {{option.content}}
         </a-radio>
       </a-radio-group>
     </div>
-    <a-button id="button" @click="handleSubmitAnswer">提交答案</a-button>
+    <a-button v-if="record.questions.length>0" id="button" @click="handleSubmitAnswer" :disabled="isSubmited">提交答案</a-button>
   </div>
 </template>
 
@@ -23,8 +35,14 @@ export default {
   name: "ReadingDetail",
   data() {
     return {
+      // 文章记录
       record:{},
-      answerRecord:[],
+      // 自己的答案记录
+      myAnswerRecord:[],
+      // 提交后的答案记录
+      submitAnswerRecord:[],
+      // 是否提交
+      isSubmited:false,
       url:{
         getById:"/reading/getById",
         submitAnswer:"/reading/submitAnswer"
@@ -32,12 +50,13 @@ export default {
     };
   },
   created() {
+    // 初始化文章内容及题目
     getAction(this.url.getById+"?id="+this.$route.params.id)
         .then(res=>{
           console.log(res)
           if(res.data) {
             this.record = res.data
-            this.answerRecord = new Array(this.record.questions.length).fill(-1)
+            this.myAnswerRecord = new Array(this.record.questions.length).fill(-1)
           }else{
             // 文章不存在
             this.record = {
@@ -49,12 +68,14 @@ export default {
   methods:{
     // 提交答案
     handleSubmitAnswer(){
-      console.log(this.answerRecord)
-      if(this.validateAnswer(this.answerRecord)) {
-        postAction(this.url.submitAnswer + "?id=" + this.record.id, this.answerRecord)
+      console.log(this.myAnswerRecord)
+      if(this.validateAnswer(this.myAnswerRecord)) {
+        postAction(this.url.submitAnswer + "?id=" + this.record.id, this.myAnswerRecord)
             .then(res => {
               message.success("提交成功")
               console.log(res)
+              this.submitAnswerRecord=res.data
+              this.isSubmited=true
             })
       }else{
         message.error("答案不能为空")
@@ -62,8 +83,8 @@ export default {
 
     },
     // 检查答案合法性
-    validateAnswer(answerRecord){
-      return answerRecord.indexOf(-1)===-1
+    validateAnswer(myAnswerRecord){
+      return myAnswerRecord.indexOf(-1)===-1
     }
   }
 };
@@ -72,34 +93,41 @@ export default {
 <style>
 /* 添加一些样式以美化导航栏 */
 #root-container{
-  width: 80%;
-  margin-left: 10%;
+  width: 1000px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #content{
   text-align: start;
+  font-size: larger;
+  line-height: 36px;
 }
 
 #question{
   color:blue;
   background-color: lightblue;
-  margin-top:20px;
-}
-
-#option-container{
-  display: flex;
-  flex-direction: column;
-  color:black;
+  width:800px;
+  margin: 20px 0;
+  padding: 20px 0;
 }
 
 #option{
-
+  display: flex;
+  flex-direction: column;
+  color:black;
+  align-items: start;
+  padding: 20px 40px;
 }
+
 
 #button{
   background-color: lightgreen;
   float: right;
   width: 120px;
   margin-top: 20px;
+  margin-bottom: 100px;
 }
 </style>

@@ -78,8 +78,7 @@ export default {
 
 <style>
 #table{
-  width:60%;
-  margin-left: 20%;
+  width:800px;
 
 }
 </style>
