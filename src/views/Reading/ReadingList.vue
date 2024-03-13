@@ -31,7 +31,7 @@ export default {
         },
         },
         { title: '标题', dataIndex: 'title', key: 'title' },
-        { title: '时间', dataIndex: 'createDate', key: 'createDate' }
+        { title: '发布时间', dataIndex: 'createTime', key: 'createTime' }
       ],
       pagination:{
         total:0,
@@ -80,5 +80,6 @@ export default {
 #table{
   width:60%;
   margin-left: 20%;
+
 }
 </style>

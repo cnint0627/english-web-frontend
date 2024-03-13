@@ -21,6 +21,7 @@
 import cookie from 'vue-cookie';
 import {postAction} from "@/api/action";
 import router from "@/router";
+import {message} from "ant-design-vue";
 
 export default {
   name:'Login',
@@ -46,8 +47,10 @@ export default {
           if(response.data){
             console.log(response.data)
             cookie.set("token", response.data, 1);
+            message.success("登录成功")
             router.push({path:'/home'});
           }else{
+            message.error("登录失败：账号或密码错误")
             this.errorMessage = 'Login failed. Please try again.';
           }
         })
@@ -60,6 +63,11 @@ export default {
     register() {
         postAction('/user/register', this.loginData)
           .then(response => {
+            if(response.code===200){
+              message.success("注册成功")
+            }else{
+              message.error("注册失败：用户名重复")
+            }
             console.log(response);
             // this.$router.push('/dashboard');
           })
