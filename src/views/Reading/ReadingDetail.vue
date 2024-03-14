@@ -5,22 +5,21 @@
     <div id="content">{{ record.content }}</div>
     <div id="question" v-for="(question,q_index) in record.questions" v-bind:key="question">
       问题 {{q_index+1}} : {{question.title}}
-      <a-radio-group id="option" v-model="myAnswerRecord[q_index]" v-if="!isSubmited">
-        <a-radio v-for="(option,o_index) in question.options" v-bind:key="option" :value="o_index">
-          选项 {{o_index+1}} : {{option.content}}
-        </a-radio>
+      <a-radio-group v-model="myAnswerRecord[q_index]" v-if="!isSubmited">
+        <div id="option" v-for="(option,o_index) in question.options" v-bind:key="option">
+          <a-radio :value="o_index"/>选项 {{o_index+1}} : {{option.content}}
+        </div>
       </a-radio-group>
-      <a-radio-group id="option" v-model="myAnswerRecord[q_index]" v-if="isSubmited" readonly>
-        <a-radio
-            :style="(o_index==myAnswerRecord[q_index]?(submitAnswerRecord[q_index].isCorrect?'color:yellowgreen;':'color:red;'):'')+
-                    (o_index==submitAnswerRecord[q_index].answer?'color:yellowgreen;':'')"
+      <a-radio-group v-model="myAnswerRecord[q_index]" v-if="isSubmited" readonly>
+        <div
+            id="option"
             v-for="(option,o_index) in question.options"
             v-bind:key="option"
-            :value="o_index"
-            onClick='javascript:return false'
-        >
-          选项 {{o_index+1}} : {{option.content}}
-        </a-radio>
+            :style="(o_index==myAnswerRecord[q_index]?(submitAnswerRecord[q_index].isCorrect?'color:yellowgreen;':'color:red;'):'')+
+                    (o_index==submitAnswerRecord[q_index].answer?'color:yellowgreen;':'')"
+            >
+          <a-radio :value="o_index" onClick='javascript:return false'/>选项 {{o_index+1}} : {{option.content}}
+        </div>
       </a-radio-group>
     </div>
     <a-button v-if="record.questions.length>0" id="button" @click="handleSubmitAnswer" :disabled="isSubmited">提交答案</a-button>
@@ -107,6 +106,8 @@ export default {
 }
 
 #question{
+  display:flex;
+  flex-direction: column;
   color:blue;
   background-color: lightblue;
   width:800px;
@@ -116,10 +117,13 @@ export default {
 
 #option{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   color:black;
   align-items: start;
   padding: 20px 40px;
+  text-align: start;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 

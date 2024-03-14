@@ -21,6 +21,7 @@ export default {
   },
   methods:{
     handleAddReading(){
+      this.$refs.modalForm.model= JSON.parse(JSON.stringify(this.$refs.modalForm.modelDefault))
       this.$refs.modalForm.visible=true
     }
   }

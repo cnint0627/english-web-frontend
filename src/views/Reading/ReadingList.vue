@@ -19,19 +19,31 @@ export default {
   data() {
     return {
       dataSource: [
-        { key: '1', name: 'John Doe', age: 32, address: 'New York' },
-        { key: '2', name: 'Jane Smith', age: 42, address: 'London' },
-        { key: '3', name: 'Bob Johnson', age: 28, address: 'Paris' }
+
       ],
       columns: [
         {
           title: '序号',
+          width: 100,
+          align: 'center',
           customRender:(t,r,index)=>{
             return (this.pagination.current-1)*this.pagination.pageSize+index+1
+          },
         },
+        {
+          title: '标题',
+          width: 600,
+          align: 'center',
+          dataIndex: 'title',
+          key: 'title'
         },
-        { title: '标题', dataIndex: 'title', key: 'title' },
-        { title: '发布时间', dataIndex: 'createTime', key: 'createTime' }
+        {
+          title: '发布时间',
+          width: 200,
+          align: 'center',
+          dataIndex: 'createTime',
+          key: 'createTime'
+        }
       ],
       pagination:{
         total:0,
