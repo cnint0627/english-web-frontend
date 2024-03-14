@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Login from "@/views/Login.vue";
 import Reading from "@/views/Reading/ReadingList.vue";
 import ReadingDetail from "@/views/Reading/ReadingDetail.vue";
+import Listening from "@/views/Listening/Listening.vue"
 import Home from "@/views/Home.vue";
 import {message} from "ant-design-vue";
 import Admin from "@/views/Admin/Admin.vue";
@@ -25,6 +26,11 @@ let routes=[
         path:"/reading/:id",
         component:ReadingDetail,
         name:"/reading"
+    },
+    {
+        path:"/listening",
+        component: Listening,
+        name:"/listening"
     },
     {
         path:"/home",

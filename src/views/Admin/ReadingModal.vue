@@ -120,6 +120,8 @@ export default {
     return {
       visible: false,
       confirmLoading: false,
+      // 弹窗状态：新增/编辑
+      formAction:'',
       validatorRules: {
         title: [
           {required: true, message: '请输入文章标题！'},
@@ -141,7 +143,8 @@ export default {
         span: 22
       },
       url: {
-        add: "/reading/add"
+        add: "/reading/add",
+        edit: "/reading/edit"
       }
     };
   },
@@ -164,13 +167,25 @@ export default {
             }
           }
           this.confirmLoading = true
-          postAction(this.url.add, this.model)
-              .then(res => {
-                console.log(res)
-                this.confirmLoading = false
-                this.visible = false
-                message.success("提交成功", 1)
-              })
+          if(this.formAction=='add') {
+            postAction(this.url.add, this.model)
+                .then(res => {
+                  console.log(res)
+                  this.confirmLoading = false
+                  this.visible = false
+                  this.$parent.page(this.$parent.pagination.current)
+                  message.success("提交成功", 1)
+                })
+          }else if(this.formAction=='edit'){
+            postAction(this.url.edit, this.model)
+                .then(res => {
+                  console.log(res)
+                  this.confirmLoading = false
+                  this.visible = false
+                  this.$parent.page(this.$parent.pagination.current)
+                  message.success("提交成功", 1)
+                })
+          }
         }else{
           return false
         }

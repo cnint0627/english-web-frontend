@@ -83,7 +83,7 @@ export default {
       },
       url:{
         page:"/reading/page",
-        getById:"/reading/getById",
+        getAllById:"/reading/getAllById",
         delete:"/reading/delete"
       }
     };
@@ -115,16 +115,18 @@ export default {
     handleAdd(){
       this.$refs.modalForm.model= JSON.parse(JSON.stringify(this.$refs.modalForm.modelDefault))
       this.$refs.modalForm.visible=true
+      this.$refs.modalForm.formAction='add'
     },
 
     // 点击编辑阅读文章
     handleEdit(record){
       console.log(record)
-      getAction(this.url.getById+"?id="+record.id)
+      getAction(this.url.getAllById+"?id="+record.id)
           .then(res=>{
             console.log(res)
             this.$refs.modalForm.model= JSON.parse(JSON.stringify(res.data))
             this.$refs.modalForm.visible=true
+            this.$refs.modalForm.formAction='edit'
           })
     },
 
