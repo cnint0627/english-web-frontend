@@ -1,6 +1,7 @@
 <template>
   <a-modal
     :width="1000"
+    title="新增"
     :visible="visible"
     :confirm-loading="confirmLoading"
     :mask-closable="false"

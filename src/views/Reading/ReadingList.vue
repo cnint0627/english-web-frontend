@@ -5,7 +5,7 @@
            :dataSource="dataSource"
            :columns="columns"
            :pagination="pagination"
-           :customRow="handleLoadReading"
+           :customRow="handleView"
            @change="handleChangePage"
   />
   </div>
@@ -72,11 +72,11 @@ export default {
       this.page(e.current)
     },
     // 点击进入阅读详情页
-    handleLoadReading(record){
+    handleView(record){
       return {
         on: {
           click: () => {
-            this.$router.push({path:"/reading/"+record.id})
+            window.open(this.$router.resolve({path:"/reading/"+record.id}).href,'_blank')
           }
         }
       }
@@ -90,7 +90,7 @@ export default {
 
 <style>
 #table{
-  width:800px;
+  width:1200px;
 
 }
 </style>

@@ -1,28 +1,21 @@
 <template>
   <div>
     <h1>这是管理员页面</h1>
-    <a-button @click="handleAddReading">添加阅读文章</a-button>
-    <ReadingModal ref="modalForm"></ReadingModal>
+    <a-button @click="handleReadingList">阅读管理</a-button>
   </div>
 </template>
 
 <script>
-import ReadingModal from "@/views/Admin/ReadingModal.vue";
-
 export default {
   name: "Admin",
-  components:{
-    ReadingModal
-  },
   data() {
     return {
 
     };
   },
   methods:{
-    handleAddReading(){
-      this.$refs.modalForm.model= JSON.parse(JSON.stringify(this.$refs.modalForm.modelDefault))
-      this.$refs.modalForm.visible=true
+    handleReadingList(){
+      this.$router.push({path:"/admin/reading"})
     }
   }
 };

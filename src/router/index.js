@@ -3,9 +3,10 @@ import VueRouter from "vue-router";
 import Login from "@/views/Login.vue";
 import Reading from "@/views/Reading/ReadingList.vue";
 import ReadingDetail from "@/views/Reading/ReadingDetail.vue";
-import home from "@/views/Home.vue";
+import Home from "@/views/Home.vue";
 import {message} from "ant-design-vue";
-import admin from "@/views/Admin/Admin.vue";
+import Admin from "@/views/Admin/Admin.vue";
+import AdminReading from "@/views/Admin/ReadingList.vue"
 import loginCheck from "@/api/loginCheck";
 
 
@@ -13,27 +14,32 @@ let routes=[
     {
         path:"/login",
         component:Login,
-        meta:"/login"
+        name:"/login"
     },
     {
         path:"/reading",
         component:Reading,
-        meta:"/reading"
+        name:"/reading"
     },
     {
         path:"/reading/:id",
         component:ReadingDetail,
-        meta:"/reading"
+        name:"/reading"
     },
     {
         path:"/home",
-        component:home,
-        meta:"/home"
+        component:Home,
+        name:"/home"
     },
     {
         path:"/admin",
-        component: admin,
-        meta:"/admin"
+        component: Admin,
+        name:"/admin"
+    },
+    {
+        path:"/admin/reading",
+        component: AdminReading,
+        name:"/admin"
     },
     {
         path:"/*",
@@ -52,11 +58,10 @@ router.beforeEach( (to,from,next) =>{
     loginCheck()
         .then(res => {
             if (res.code === 200) {
-                if(to.path==='/admin'){
+                if(to.name==='/admin'){
                     // 如果跳转的是管理页面，验证权限
                     if(!res.data.isAdmin){
                         message.error("您不是管理员",1)
-                        next(from)
                         return
                     }
                 }else if(to.path==='/login'){

@@ -41,7 +41,7 @@ export default {
             this.isLogin=true
           }
         })
-    this.activeRoute = this.$route.meta;
+    this.activeRoute = this.$route.name;
     this.$router.afterEach((to) => {
       loginCheck()
           .then(res=>{
@@ -49,7 +49,7 @@ export default {
               this.isLogin=true
             }
           })
-      this.activeRoute = to.meta;
+      this.activeRoute = to.name;
     });
   },
 };
