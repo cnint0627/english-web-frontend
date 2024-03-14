@@ -72,13 +72,13 @@ export default {
       if(this.validateAnswer(this.myAnswerRecord)) {
         postAction(this.url.submitAnswer + "?id=" + this.record.id, this.myAnswerRecord)
             .then(res => {
-              message.success("提交成功")
+              message.success("提交成功",1)
               console.log(res)
               this.submitAnswerRecord=res.data
               this.isSubmited=true
             })
       }else{
-        message.error("答案不能为空")
+        message.error("答案不能为空",1)
       }
 
     },

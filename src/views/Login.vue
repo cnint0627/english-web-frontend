@@ -47,10 +47,10 @@ export default {
           if(response.data){
             console.log(response.data)
             cookie.set("token", response.data, 1);
-            message.success("登录成功")
+            message.success("登录成功",1)
             router.push({path:'/home'});
           }else{
-            message.error("登录失败：账号或密码错误")
+            message.error("登录失败：账号或密码错误",1)
             this.errorMessage = 'Login failed. Please try again.';
           }
         })
@@ -64,9 +64,9 @@ export default {
         postAction('/user/register', this.loginData)
           .then(response => {
             if(response.code===200){
-              message.success("注册成功")
+              message.success("注册成功",1)
             }else{
-              message.error("注册失败：用户名重复")
+              message.error("注册失败：用户名重复",1)
             }
             console.log(response);
             // this.$router.push('/dashboard');

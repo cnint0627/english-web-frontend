@@ -3,22 +3,52 @@
     <ul>
       <li :class="{ active: activeRoute === '/home' }"><router-link to="/home">首页</router-link></li>
       <li :class="{ active: activeRoute === '/reading' }"><router-link to="/reading">阅读</router-link></li>
-      <li :class="{ active: activeRoute === '/login' }"><router-link to="/login">登录</router-link></li>
+      <li v-if="!isLogin" :class="{ active: activeRoute === '/login' }"><router-link to="/login">登录</router-link></li>
+      <a-popconfirm v-if="isLogin" title="确认登出吗?" ok-text="确认" cancel-text="取消" size="mini" @confirm="handleLogout">登出</a-popconfirm>
+      <li :class="{ active: activeRoute === '/admin' }"><router-link to="/admin">管理员</router-link></li>
     </ul>
   </nav>
 </template>
 
 <script>
+import cookie from "vue-cookie";
+import loginCheck from "@/api/loginCheck";
+import {message} from "ant-design-vue";
+
 export default {
   name: "Navigation",
   data() {
     return {
+      // 当前选中的路由
       activeRoute: null,
+      // 是否登录
+      isLogin:false,
     };
   },
+  methods:{
+    handleLogout(){
+      console.log("登出")
+      cookie.delete("token")
+      this.isLogin=false
+      message.success("登出成功",1)
+      this.$router.push({path:"/login"})
+    }
+  },
   created() {
+    loginCheck()
+        .then(res=>{
+          if(res.code===200){
+            this.isLogin=true
+          }
+        })
     this.activeRoute = this.$route.meta;
     this.$router.afterEach((to) => {
+      loginCheck()
+          .then(res=>{
+            if(res.code===200){
+              this.isLogin=true
+            }
+          })
       this.activeRoute = to.meta;
     });
   },
