@@ -100,6 +100,9 @@ export default {
 }
 
 #content{
+  width: 1000px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   text-align: start;
   font-size: larger;
   line-height: 36px;
