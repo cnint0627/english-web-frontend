@@ -1,7 +1,8 @@
 <template>
   <div>
     <h1>这是管理员页面</h1>
-    <a-button @click="handleReadingList">阅读管理</a-button>
+    <a-button><router-link to="/admin/reading">阅读管理</router-link></a-button>
+    <a-button><router-link to="/admin/listening">听力管理</router-link></a-button>
   </div>
 </template>
 
@@ -14,9 +15,7 @@ export default {
     };
   },
   methods:{
-    handleReadingList(){
-      this.$router.push({path:"/admin/reading"})
-    }
+
   }
 };
 </script>

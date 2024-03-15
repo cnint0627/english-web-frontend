@@ -3,12 +3,14 @@ import VueRouter from "vue-router";
 import Login from "@/views/Login.vue";
 import Reading from "@/views/Reading/ReadingList.vue";
 import ReadingDetail from "@/views/Reading/ReadingDetail.vue";
-import Listening from "@/views/Listening/Listening.vue"
+import Listening from "@/views/Listening/ListeningList.vue"
 import Home from "@/views/Home.vue";
 import {message} from "ant-design-vue";
 import Admin from "@/views/Admin/Admin.vue";
 import AdminReading from "@/views/Admin/ReadingList.vue"
+import AdminListening from "@/views/Admin/ListeningList.vue"
 import loginCheck from "@/api/loginCheck";
+import ListeningDetail from "@/views/Listening/ListeningDetail.vue";
 
 
 let routes=[
@@ -33,6 +35,11 @@ let routes=[
         name:"/listening"
     },
     {
+        path:"/listening/:id",
+        component: ListeningDetail,
+        name:"/listening"
+    },
+    {
         path:"/home",
         component:Home,
         name:"/home"
@@ -45,6 +52,11 @@ let routes=[
     {
         path:"/admin/reading",
         component: AdminReading,
+        name:"/admin"
+    },
+    {
+        path:"/admin/listening",
+        component: AdminListening,
         name:"/admin"
     },
     {

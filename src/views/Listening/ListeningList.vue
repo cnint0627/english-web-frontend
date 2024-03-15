@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>阅读列表</h1>
+    <h1>听力列表</h1>
     <a-table id="table"
              :dataSource="dataSource"
              :columns="columns"
@@ -52,7 +52,7 @@ export default {
         showQuickJumper:true
       },
       url:{
-        page:"/reading/page"
+        page:"/listening/page"
       }
     };
   },
@@ -76,7 +76,7 @@ export default {
       return {
         on: {
           click: () => {
-            window.open(this.$router.resolve({path:"/reading/"+record.id}).href,'_blank')
+            window.open(this.$router.resolve({path:"/listening/"+record.id}).href,'_blank')
           }
         }
       }

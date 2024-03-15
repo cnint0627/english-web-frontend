@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>管理阅读列表</h1>
+    <h1>管理听力列表</h1>
     <a-row style="width: 100%">
       <a-col style="float:right;width: 150px;margin-bottom: 20px">
         <a-button @click="handleAdd">新增</a-button>
@@ -25,19 +25,19 @@
           </a-popconfirm>
         </span>
     </a-table>
-    <ReadingModal ref="modalForm"></ReadingModal>
+    <ListeningModal ref="modalForm"></ListeningModal>
   </div>
 </template>
 
 <script>
 import {getAction, postAction} from "@/api/action";
-import ReadingModal from "@/views/Admin/Modules/ReadingModal.vue";
+import ListeningModal from "@/views/Admin/Modules/ListeningModal.vue";
 import {message} from "ant-design-vue";
 
 export default {
-  name: "ReadingList",
+  name: "ListeningList",
   components:{
-    ReadingModal
+    ListeningModal
   },
   data() {
     return {
@@ -82,9 +82,9 @@ export default {
         showQuickJumper:true
       },
       url:{
-        page:"/reading/page",
-        getAllById:"/reading/getAllById",
-        delete:"/reading/delete"
+        page:"/listening/page",
+        getAllById:"/listening/getAllById",
+        delete:"/listening/delete"
       }
     };
   },
@@ -108,7 +108,7 @@ export default {
     },
     // 点击进入阅读详情页
     handleView(record){
-      window.open(this.$router.resolve({path:"/reading/"+record.id}).href,'_blank')
+      window.open(this.$router.resolve({path:"/listening/"+record.id}).href,'_blank')
     },
 
     // 点击新增阅读文章
@@ -116,6 +116,8 @@ export default {
       this.$refs.modalForm.model= JSON.parse(JSON.stringify(this.$refs.modalForm.modelDefault))
       this.$refs.modalForm.visible=true
       this.$refs.modalForm.formAction='add'
+      this.$refs.modalForm.isEditQuestion=false
+      this.$refs.modalForm.blankList=[]
     },
 
     // 点击编辑阅读文章
@@ -127,6 +129,8 @@ export default {
             this.$refs.modalForm.model= JSON.parse(JSON.stringify(res.data))
             this.$refs.modalForm.visible=true
             this.$refs.modalForm.formAction='edit'
+            this.$refs.modalForm.isEditQuestion=false
+            this.$refs.modalForm.blankList=[]
           })
     },
 

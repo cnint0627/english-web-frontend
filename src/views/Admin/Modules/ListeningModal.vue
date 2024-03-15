@@ -1,0 +1,242 @@
+<template>
+  <a-modal
+    :width="1000"
+    title="新增"
+    :visible="visible"
+    :confirm-loading="confirmLoading"
+    :mask-closable="false"
+    :closable="false"
+    :footer="null"
+  >
+    <a-spin :spinning="confirmLoading">
+      <a-form-model
+          :model="model"
+          ref="form"
+          :rules="validatorRules"
+          id="form"
+      >
+        <a-row style="width: 100%">
+          <a-col :span="24">
+            <a-form-model-item
+                label="标题"
+                prop="title"
+                :label-col="labelCol"
+                :wrapper-col="wrapperCol"
+            >
+              <a-input
+                  v-model="model.title"
+                  placeholder="请输入听力标题" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row style="width: 100%">
+          <a-col :span="24">
+            <a-form-model-item
+                label="内容"
+                prop="content"
+                :label-col="labelCol"
+                :wrapper-col="wrapperCol"
+            >
+              <a-textarea
+                  v-if="!isEditQuestion"
+                  style="height:200px;font-size: small;line-height: 18px"
+                  v-model="model.content"
+                  placeholder="请输入听力完整内容" />
+              <p class="content" v-if="isEditQuestion">
+                <span :style="'cursor: pointer;'+(blankList.indexOf(index)==-1?'':'color:lightgreen')" v-for="(word, index) in model.content" v-bind:key="word" @click="handleSetBlank(index)">
+                  {{word}}
+                </span>
+              </p>
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-button :disabled="isEditQuestion" :style="isEditQuestion?'background-color: gray':''" id="q-button" @click="handleEditQuestion">编辑题目</a-button>
+        <div id="action">
+          <a-button id="action-button" style="background-color: lightgreen" @click="handleOk">确定</a-button>
+          <a-button id="action-button" @click="handleCancel">取消</a-button>
+          <a-button id="action-button" @click="handleReset">重置</a-button>
+        </div>
+      </a-form-model>
+    </a-spin>
+  </a-modal>
+
+</template>
+
+<script>
+
+import {postAction} from "@/api/action";
+import {message} from "ant-design-vue";
+
+export default {
+  name: "ReadingModal",
+  data() {
+    return {
+      visible: false,
+      confirmLoading: false,
+      // 弹窗状态：新增/编辑
+      formAction:'',
+      // 是否开始编辑题目
+      isEditQuestion: false,
+      // 挖空的单词索引列表
+      blankList:[],
+      validatorRules: {
+        title: [
+          {required: true, message: '请输入文章标题！'},
+          {min: 0, max: 300, message: '长度不超过 300 个字符', trigger: 'change'},
+        ],
+        content: [
+          {required: true, message: '请输入文章内容！'},
+        ],
+      },
+      model: {
+        title: '',
+        // 听力材料内容，后续会对其进行转化处理
+        content:'',
+        // 音频地址
+        audioPath:'',
+        questions: []
+      },
+      labelCol: {
+        span: 2
+      },
+      wrapperCol: {
+        span: 22
+      },
+      url: {
+        add: "/listening/add",
+        edit: "/listening/edit"
+      }
+    };
+  },
+  created() {
+    this.modelDefault=JSON.parse(JSON.stringify(this.model))
+  },
+  methods:{
+    handleOk(){
+      this.$refs.form.validate(val => {
+        if(val) {
+          if (this.blankList.length === 0) {
+            message.error("至少选取一个单词作为题目", 1)
+            return
+          }
+          this.confirmLoading = true
+          this.parseModel();
+          this.model.audioPath='111'
+          console.log(this.model)
+          if(this.formAction=='add') {
+            postAction(this.url.add, this.model)
+                .then(res => {
+                  console.log(res)
+                  this.confirmLoading = false
+                  this.visible = false
+                  this.$parent.page(this.$parent.pagination.current)
+                  message.success("提交成功", 1)
+                })
+          }else if(this.formAction=='edit'){
+            postAction(this.url.edit, this.model)
+                .then(res => {
+                  console.log(res)
+                  this.confirmLoading = false
+                  this.visible = false
+                  this.$parent.page(this.$parent.pagination.current)
+                  message.success("提交成功", 1)
+                })
+          }
+        }else{
+          return false
+        }
+      })
+    },
+    handleCancel(){
+      this.visible=false
+      this.$refs.form.clearValidate()
+    },
+    handleReset(){
+      this.model= JSON.parse(JSON.stringify(this.modelDefault))
+      this.isEditQuestion=false
+      this.blankList=[]
+      this.$refs.form.clearValidate()
+    },
+
+    // 按下编辑题目
+    handleEditQuestion(){
+      this.$refs.form.validate(val => {
+        if(val){
+          this.isEditQuestion=true
+          this.model.content=this.model.content.split(" ")
+        }else{
+          return false
+        }
+      })
+    },
+
+    // 选择要挖空的单词
+    handleSetBlank(index){
+      console.log(index)
+      // 该单词是否已经被挖
+      let i =this.blankList.indexOf(index)
+      if(i==-1) {
+        this.blankList.push(index)
+      }else{
+        this.blankList.splice(i,1)
+      }
+    },
+
+    // 对挖好空的模型进行转化
+    parseModel(){
+      this.blankList.sort()
+      for(let index in this.blankList){
+        this.model.questions.push(
+            {
+              content:index==0?this.model.content.slice(0,this.blankList[index]).join(' '):this.model.content.slice(this.blankList[index-1]+1,this.blankList[index]).join(' '),
+              answer:this.model.content[this.blankList[index]]
+            }
+        )
+        if(index==this.blankList.length-1 && this.blankList[index]!=this.model.content.length-1){
+          this.model.questions.push(
+              {
+                content:this.model.content.slice(this.blankList[index]+1,this.model.content.length).join(' '),
+                answer:null
+              }
+          )
+        }
+      }
+    }
+  }
+};
+</script>
+
+<style>
+#form{
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+#action{
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+}
+
+#action-button{
+  margin:0 20px;
+  margin-top: 20px;
+  width: 180px;
+  height:40px;
+}
+
+#q-button{
+  width: 120px;
+  float: right;
+  background-color: lightskyblue;
+  color:white;
+}
+
+.content{
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}
+</style>
