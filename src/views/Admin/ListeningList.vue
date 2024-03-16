@@ -116,21 +116,20 @@ export default {
       this.$refs.modalForm.model= JSON.parse(JSON.stringify(this.$refs.modalForm.modelDefault))
       this.$refs.modalForm.visible=true
       this.$refs.modalForm.formAction='add'
-      this.$refs.modalForm.isEditQuestion=false
       this.$refs.modalForm.blankList=[]
+      this.$refs.modalForm.isEditQuestion=false
     },
 
     // 点击编辑阅读文章
     handleEdit(record){
-      console.log(record)
       getAction(this.url.getAllById+"?id="+record.id)
           .then(res=>{
-            console.log(res)
             this.$refs.modalForm.model= JSON.parse(JSON.stringify(res.data))
+            this.$refs.modalForm.blankList=[]
+            this.$refs.modalForm.parseModelToBlank()
             this.$refs.modalForm.visible=true
             this.$refs.modalForm.formAction='edit'
-            this.$refs.modalForm.isEditQuestion=false
-            this.$refs.modalForm.blankList=[]
+            this.$refs.modalForm.isEditQuestion=true
           })
     },
 

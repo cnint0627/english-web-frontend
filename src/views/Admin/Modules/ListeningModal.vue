@@ -43,7 +43,7 @@
                   v-model="model.content"
                   placeholder="请输入听力完整内容" />
               <p class="content" v-if="isEditQuestion">
-                <span :style="'cursor: pointer;'+(blankList.indexOf(index)==-1?'':'color:lightgreen')" v-for="(word, index) in model.content" v-bind:key="word" @click="handleSetBlank(index)">
+                <span :style="'cursor: pointer;'+(blankList.indexOf(index)===-1?'':'color:lightgreen')" v-for="(word, index) in model.content" v-bind:key="word" @click="handleSetBlank(index)">
                   {{word}}
                 </span>
               </p>
@@ -77,8 +77,6 @@ export default {
       formAction:'',
       // 是否开始编辑题目
       isEditQuestion: false,
-      // 挖空的单词索引列表
-      blankList:[],
       validatorRules: {
         title: [
           {required: true, message: '请输入文章标题！'},
@@ -88,13 +86,14 @@ export default {
           {required: true, message: '请输入文章内容！'},
         ],
       },
+      // 挖空的列表
+      blankList: [],
       model: {
         title: '',
-        // 听力材料内容，后续会对其进行转化处理
-        content:'',
-        // 音频地址
         audioPath:'',
-        questions: []
+        questions: [],
+        // 听力材料内容，后续会对其进行转化处理
+        content:''
       },
       labelCol: {
         span: 2
@@ -120,7 +119,7 @@ export default {
             return
           }
           this.confirmLoading = true
-          this.parseModel();
+          this.parseBlankToModel();
           this.model.audioPath='111'
           console.log(this.model)
           if(this.formAction=='add') {
@@ -180,25 +179,44 @@ export default {
       }else{
         this.blankList.splice(i,1)
       }
+      console.log(this.blankList)
     },
 
     // 对挖好空的模型进行转化
-    parseModel(){
+    parseBlankToModel(){
+      this.model.questions=[]
       this.blankList.sort()
-      for(let index in this.blankList){
+      let blankList=this.blankList
+      let content=this.model.content
+      for(let index in blankList){
         this.model.questions.push(
             {
-              content:index==0?this.model.content.slice(0,this.blankList[index]).join(' '):this.model.content.slice(this.blankList[index-1]+1,this.blankList[index]).join(' '),
-              answer:this.model.content[this.blankList[index]]
+              content:index===0?content.slice(0,blankList[index]).join(' '):content.slice(blankList[index-1]+1,blankList[index]).join(' '),
+              answer:content[blankList[index]]
             }
         )
-        if(index==this.blankList.length-1 && this.blankList[index]!=this.model.content.length-1){
+        if(index==blankList.length-1 && blankList[index]!=content.length-1){
           this.model.questions.push(
               {
-                content:this.model.content.slice(this.blankList[index]+1,this.model.content.length).join(' '),
+                content:content.slice(blankList[index]+1,content.length).join(' '),
                 answer:null
               }
           )
+        }
+      }
+
+    },
+
+    // 将记录转化为挖空列表形式
+    parseModelToBlank(){
+      this.model.content=[]
+      for(let index in this.model.questions){
+        if(this.model.questions[index].content) {
+          this.model.content.push(...this.model.questions[index].content.split(' '))
+        }
+        if(this.model.questions[index].answer){
+          this.model.content.push(this.model.questions[index].answer)
+          this.blankList.push(this.model.content.length-1)
         }
       }
     }

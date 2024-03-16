@@ -11,6 +11,8 @@ import AdminReading from "@/views/Admin/ReadingList.vue"
 import AdminListening from "@/views/Admin/ListeningList.vue"
 import loginCheck from "@/api/loginCheck";
 import ListeningDetail from "@/views/Listening/ListeningDetail.vue";
+import Writing from "@/views/Writing/WritingList.vue"
+import WritingDetail from "@/views/Writing/WritingDetail.vue";
 
 
 let routes=[
@@ -38,6 +40,16 @@ let routes=[
         path:"/listening/:id",
         component: ListeningDetail,
         name:"/listening"
+    },
+    {
+        path:"/writing",
+        component: Writing,
+        name:"/writing"
+    },
+    {
+        path:"/writing/:id",
+        component: WritingDetail,
+        name:"/writing"
     },
     {
         path:"/home",
