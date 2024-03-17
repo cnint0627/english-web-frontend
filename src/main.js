@@ -16,6 +16,7 @@ Vue.use(Antd)
 // 网页挂载前先判断用户登录态
 LoginCheck()
     .then(res=>{
+        console.log(res)
       if(res.data){
         mapState.state.isLogin=true
       }

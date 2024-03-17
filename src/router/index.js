@@ -107,15 +107,16 @@ router.beforeEach( (to,from,next) =>{
                 console.log(res.data)
                 if (!res.data.isAdmin) {
                     message.error("您不是管理员", 1)
+                    next(from)
                 }else {
                     next()
                 }
             })
     }else if(to.name==='/login'){
         next('/home')
-        return
+    }else {
+        next()
     }
-    next()
 })
 
 export default router

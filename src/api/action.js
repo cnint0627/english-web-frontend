@@ -2,6 +2,7 @@ import axios from 'axios'
 import cookie from 'vue-cookie';
 import {message} from "ant-design-vue";
 import mapState from '@/store'
+import router from "@/router";
 /*
     自己封装的axios请求
     可以自动获取浏览器cookie中存储的token
@@ -24,6 +25,9 @@ export function getAction(url){
                 cookie.delete("ACCESS-TOKEN");
                 message.error("您还未登录，请先登录",1)
                 mapState.state.isLogin=false
+                if(router.currentRoute.name!=='/login'){
+                    router.push({path:"/login"})
+                }
                 return
             }
             mapState.state.isLogin=true
@@ -49,6 +53,9 @@ export function postAction(url,body,config=null){
                 cookie.delete("ACCESS-TOKEN");
                 message.error("您还未登录，请先登录",1)
                 mapState.state.isLogin=false
+                if(router.currentRoute.name!=='/login'){
+                    router.push({path:"/login"})
+                }
                 return
             }
             mapState.state.isLogin=true
