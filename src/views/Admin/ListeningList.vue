@@ -117,6 +117,7 @@ export default {
       this.$refs.modalForm.visible=true
       this.$refs.modalForm.formAction='add'
       this.$refs.modalForm.blankList=[]
+      this.$refs.modalForm.fileList=[]
       this.$refs.modalForm.isEditQuestion=false
     },
 
@@ -126,6 +127,14 @@ export default {
           .then(res=>{
             this.$refs.modalForm.model= JSON.parse(JSON.stringify(res.data))
             this.$refs.modalForm.blankList=[]
+            this.$refs.modalForm.fileList = [
+              {
+                "uid": -1,
+                "name": res.data.audioPath,
+                "status": "done",
+                "url": null
+              }
+            ]
             this.$refs.modalForm.parseModelToBlank()
             this.$refs.modalForm.visible=true
             this.$refs.modalForm.formAction='edit'

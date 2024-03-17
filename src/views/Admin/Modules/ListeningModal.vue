@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :width="1000"
-    title="新增"
+    :title="formAction=='add'?'新增':'编辑'"
     :visible="visible"
     :confirm-loading="confirmLoading"
     :mask-closable="false"
@@ -26,6 +26,20 @@
               <a-input
                   v-model="model.title"
                   placeholder="请输入听力标题" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row style="width: 100%">
+          <a-col :span="24">
+            <a-form-model-item
+                label="听力音频"
+                required prop="audioPath"
+                :label-col="labelCol"
+                :wrapper-col="wrapperCol"
+            >
+              <a-upload name="file" :multiple="false" :file-list="fileList" :before-upload="handleUpload" :remove="handleRemove" >
+                <a-button type="primary" icon="upload">上传音频</a-button>
+              </a-upload>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -88,6 +102,8 @@ export default {
       },
       // 挖空的列表
       blankList: [],
+      // 上传的音频文件回显
+      fileList: [],
       model: {
         title: '',
         audioPath:'',
@@ -103,7 +119,8 @@ export default {
       },
       url: {
         add: "/listening/add",
-        edit: "/listening/edit"
+        edit: "/listening/edit",
+        upload:"/file/upload"
       }
     };
   },
@@ -114,14 +131,25 @@ export default {
     handleOk(){
       this.$refs.form.validate(val => {
         if(val) {
+          if (this.fileList.length === 0) {
+            message.error("请上传音频文件", 1)
+            return
+          }
           if (this.blankList.length === 0) {
             message.error("至少选取一个单词作为题目", 1)
             return
           }
           this.confirmLoading = true
+
+          // 将挖空转化为模型
           this.parseBlankToModel();
-          this.model.audioPath='111'
-          console.log(this.model)
+
+          // 上传音频文件
+          postAction(this.url.upload, this.formData,{'Content-Type':'multipart/form-data'})
+              .then(res=>{
+                console.log(res)
+              })
+
           if(this.formAction=='add') {
             postAction(this.url.add, this.model)
                 .then(res => {
@@ -154,6 +182,7 @@ export default {
       this.model= JSON.parse(JSON.stringify(this.modelDefault))
       this.isEditQuestion=false
       this.blankList=[]
+      this.fileList=[]
       this.$refs.form.clearValidate()
     },
 
@@ -219,6 +248,39 @@ export default {
           this.blankList.push(this.model.content.length-1)
         }
       }
+    },
+
+    // 音频文件上传
+    handleUpload(file){
+      if(file.name.substring(file.name.length-4,file.name.length)!=='.mp3'){
+        message.error("只能上传.mp3音频文件")
+        return
+      }
+      this.fileList=[file]
+      let name=file.name.substring(0,file.name.length-4)
+      console.log("文件名：",name)
+      if(!this.model.audioPath){
+        // 如果没有音频文件名,随机生成一个音频文件名
+        this.model.audioPath=name+'_'+this.randomID()+'.mp3'
+      }
+      file=new File([file],this.model.audioPath)
+      this.formData = new FormData();
+      this.formData.append('file', file);
+      this.formData.append('bucketName','audios')
+      return false
+    },
+
+    // 清空
+    handleRemove(file){
+      console.log(file)
+      this.fileList=[]
+    },
+
+
+
+    // 生成随机ID
+    randomID() {
+      return Number(Math.random().toString().substr(2,0) + Date.now()).toString(36);
     }
   }
 };

@@ -56,6 +56,14 @@ export default {
           if(res.data) {
             this.record = res.data
             this.myAnswerRecord = new Array(this.record.questions.length).fill(-1)
+            this.submitAnswerRecord=res.data.records
+            if(this.submitAnswerRecord.length>0){
+              this.isSubmited=true
+              for(let index in this.submitAnswerRecord){
+                this.myAnswerRecord[index]=parseInt(this.submitAnswerRecord[index].record)
+              }
+            }
+            console.log(this.myAnswerRecord)
           }else{
             // 文章不存在
             this.record = {

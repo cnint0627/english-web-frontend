@@ -23,6 +23,7 @@ import {postAction} from "@/api/action";
 import router from "@/router";
 import {message} from "ant-design-vue";
 
+
 export default {
   name:'Login',
   data() {
@@ -38,15 +39,22 @@ export default {
       errorMessage: ''
     };
   },
+  created() {
+    // getAction("/wx/getQRCode")
+    //     .then(res=>{
+    //       console.log(res)
+    //     })
+  },
   methods: {
+    // 按下登录
     login() {
-      postAction('/user/login', this.loginData)
+      postAction('/auth/login', this.loginData)
         .then(response => {
           console.log(response);
           // Redirect to dashboard or desired page
           if(response.data){
             console.log(response.data)
-            cookie.set("token", response.data, 1);
+            cookie.set("ACCESS-TOKEN", response.data, 1);
             message.success("登录成功",1)
             router.push({path:'/home'});
           }else{
@@ -60,8 +68,10 @@ export default {
           this.errorMessage = 'Login failed. Please try again.';
         });
     },
+
+    // 按下注册
     register() {
-        postAction('/user/register', this.loginData)
+        postAction('/auth/register', this.loginData)
           .then(response => {
             if(response.code===200){
               message.success("注册成功",1)
@@ -76,8 +86,8 @@ export default {
             this.errorMessage = 'Register failed. Please try again.';
           });
 
-}
-}
+    },
+  }
 };
 
 </script>

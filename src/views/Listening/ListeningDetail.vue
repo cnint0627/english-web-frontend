@@ -2,10 +2,16 @@
   <div id="root-container">
     <h1>{{ record.title }}</h1>
     <div id="createTime">{{ record.createTime }}</div>
+    <audio ref="audioPlayer" :src="'http://localhost:9000/audios/'+record.audioPath" controls></audio>
+    <a-icon type="play" @click="handlePlayAudio"></a-icon>
     <p id="content">
       <span v-for="(question,index) in record.questions" v-bind:key="question">
         {{question.content}}
-        <a-input v-if="record.questions[index].hasAnswer" style="width: 180px" v-model="myAnswerRecord[index]" ></a-input>
+        <a-input v-if="record.questions[index].hasAnswer && !isSubmited" style="width: 180px" v-model="myAnswerRecord[index]" ></a-input>
+        <span v-if="record.questions[index].hasAnswer && isSubmited && submitAnswerRecord[index].isCorrect" style="width: 180px;color:lightgreen">{{myAnswerRecord[index]}}</span>
+        <s v-if="record.questions[index].hasAnswer && isSubmited && !submitAnswerRecord[index].isCorrect" style="width: 180px;color:red">{{myAnswerRecord[index]}}</s>
+        <span v-if="record.questions[index].hasAnswer && isSubmited && !submitAnswerRecord[index].isCorrect" style="width: 180px;color:lightskyblue">{{submitAnswerRecord[index].answer}}</span>
+
       </span>
     </p>
     <a-button v-if="record.questions.length>0" id="button" @click="handleSubmitAnswer" :disabled="isSubmited">提交答案</a-button>
@@ -28,6 +34,8 @@ export default {
       submitAnswerRecord:[],
       // 是否提交
       isSubmited:false,
+      // 是否正在播放音频
+      isAudioPlaying:false,
       url:{
         getById:"/listening/getById",
         submitAnswer:"/listening/submitAnswer"
@@ -70,9 +78,20 @@ export default {
       }
 
     },
+
     // 检查答案合法性
     validateAnswer(myAnswerRecord){
       return myAnswerRecord.indexOf('')===-1
+    },
+
+    // 播放/暂停音频
+    handlePlayAudio(){
+      if(this.isAudioPlaying){
+        this.$refs.audioPlayer.pause()
+      }else{
+        this.$refs.audioPlayer.play()
+      }
+      this.isAudioPlaying=!this.isAudioPlaying
     }
   }
 };

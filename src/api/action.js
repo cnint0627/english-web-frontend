@@ -14,7 +14,7 @@ export function getAction(url){
     return new Promise((resolve,reject)=>{
         axios.create({
             headers:{
-                'token':cookie.get("token")
+                'token':cookie.get("ACCESS-TOKEN")
             },
         }).get(host+url)
         .then(res=>{
@@ -27,13 +27,13 @@ export function getAction(url){
 }
 
 // post请求
-export function postAction(url,body){
+export function postAction(url,body,config=null){
     return new Promise((resolve,reject)=>{
         axios.create({
             headers:{
-                'token':cookie.get("token")
+                'token':cookie.get("ACCESS-TOKEN")
             },
-        }).post(host+url,body)
+        }).post(host+url,body,config)
         .then(res=>{
             resolve(res.data)
         })

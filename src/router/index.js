@@ -5,6 +5,7 @@ import Reading from "@/views/Reading/ReadingList.vue";
 import ReadingDetail from "@/views/Reading/ReadingDetail.vue";
 import Listening from "@/views/Listening/ListeningList.vue"
 import Home from "@/views/Home.vue";
+import User from "@/views/User.vue"
 import {message} from "ant-design-vue";
 import Admin from "@/views/Admin/Admin.vue";
 import AdminReading from "@/views/Admin/ReadingList.vue"
@@ -57,6 +58,11 @@ let routes=[
         name:"/home"
     },
     {
+        path:"/user",
+        component:User,
+        name:"/user"
+    },
+    {
         path:"/admin",
         component: Admin,
         name:"/admin"
@@ -90,6 +96,7 @@ router.beforeEach( (to,from,next) =>{
             if (res.code === 200) {
                 if(to.name==='/admin'){
                     // 如果跳转的是管理页面，验证权限
+                    console.log(res.data)
                     if(!res.data.isAdmin){
                         message.error("您不是管理员",1)
                         return

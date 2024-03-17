@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :width="1000"
-    title="新增"
+    :title="formAction=='add'?'新增':'编辑'"
     :visible="visible"
     :confirm-loading="confirmLoading"
     :mask-closable="false"
