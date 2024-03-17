@@ -15,8 +15,8 @@
 
 <script>
 import cookie from "vue-cookie";
-import loginCheck from "@/api/loginCheck";
 import {message} from "ant-design-vue";
+import mapState from '@/store'
 
 export default {
   name: "Navigation",
@@ -25,7 +25,7 @@ export default {
       // 当前选中的路由
       activeRoute: null,
       // 是否登录
-      isLogin:false,
+      isLogin:false
     };
   },
   methods:{
@@ -33,26 +33,17 @@ export default {
       console.log("登出")
       cookie.delete("ACCESS-TOKEN")
       this.isLogin=false
+      mapState.state.isLogin=false
       message.success("登出成功",1)
       this.$router.push({path:"/login"})
     }
   },
   created() {
-    loginCheck()
-        .then(res=>{
-          if(res.code===200){
-            this.isLogin=true
-          }
-        })
     this.activeRoute = this.$route.name;
+    this.isLogin=mapState.state.isLogin
     this.$router.afterEach((to) => {
-      loginCheck()
-          .then(res=>{
-            if(res.code===200){
-              this.isLogin=true
-            }
-          })
       this.activeRoute = to.name;
+      this.isLogin=mapState.state.isLogin
     });
   },
 };

@@ -14,6 +14,7 @@ import loginCheck from "@/api/loginCheck";
 import ListeningDetail from "@/views/Listening/ListeningDetail.vue";
 import Writing from "@/views/Writing/WritingList.vue"
 import WritingDetail from "@/views/Writing/WritingDetail.vue";
+import mapState from "@/store";
 
 
 let routes=[
@@ -89,34 +90,32 @@ const router=new VueRouter({
 
 // 路由拦截器，若用户未登录则跳转到登录页面
 router.beforeEach( (to,from,next) =>{
-    console.log("路由拦截器生效")
-    // 检验登录态是否生效
-    loginCheck()
-        .then(res => {
-            if (res.code === 200) {
-                if(to.name==='/admin'){
-                    // 如果跳转的是管理页面，验证权限
-                    console.log(res.data)
-                    if(!res.data.isAdmin){
-                        message.error("您不是管理员",1)
-                        return
-                    }
-                }else if(to.path==='/login'){
-                    next("/home")
-                    return
-                }
-                next()
-            } else {
-                if(to.path!=='/login') {
-                    // 如果跳转的页面不是登录页，进行拦截
-                    console.log("当前用户未登录或登录态过期，重定向到登录页")
-                    message.error("您还未登录，请先登录！",1)
-                    next("/login")
-                }else{
+    if(!mapState.state.isLogin){
+        if(to.name==='/login'){
+            next()
+            return
+        }
+        console.log("路由拦截器生效")
+        next("/login")
+        message.error("您还未登录，请先登录",1)
+        return
+    }
+    if(to.name==='/admin') {
+        // 如果跳转的是管理页面，验证权限
+        loginCheck()
+            .then(res => {
+                console.log(res.data)
+                if (!res.data.isAdmin) {
+                    message.error("您不是管理员", 1)
+                }else {
                     next()
                 }
-            }
-        })
+            })
+    }else if(to.name==='/login'){
+        next('/home')
+        return
+    }
+    next()
 })
 
 export default router

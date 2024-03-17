@@ -6,7 +6,8 @@
 </template>
 
 <script>
-import Navigation from "@/components/Navigation.vue"; // 导入导航栏组件
+import Navigation from "@/components/Navigation.vue";  // 导入导航栏组件
+
 
 export default {
   name: "App",
