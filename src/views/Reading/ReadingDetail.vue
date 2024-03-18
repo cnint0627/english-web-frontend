@@ -10,7 +10,7 @@
       <div class="title">
         Questions
       </div>
-      <div class="question-mid">
+      <div class="reading-question-mid">
     <div class="question" v-for="(question,q_index) in record.questions" v-bind:key="question">
       <div style="margin-bottom: 20px">
       问题 {{q_index+1}} : {{question.title}}
@@ -34,8 +34,8 @@
       </a-radio-group>
     </div>
     </div>
-      <div class="question-bottom">
-    <a-button v-if="record.questions.length>0" type="primary" style="height: 50px" class="button" @click="handleSubmitAnswer" :disabled="isSubmited">Submit</a-button>
+      <div class="reading-question-bottom">
+    <a-button type="primary" style="height: 50px" class="button" @click="handleSubmitAnswer" :disabled="isSubmited">Submit</a-button>
       </div>
     </div>
   </div>
@@ -174,7 +174,7 @@ export default {
   line-height: 36px;
 }
 
-.question-bottom{
+.reading-question-bottom{
   background-color: aliceblue;
   position: absolute;
   height:60px;
@@ -183,7 +183,7 @@ export default {
   border-radius: 5px;
 }
 
-.question-mid{
+.reading-question-mid{
   height: calc(100% - 115px);
   overflow-y: scroll;
 }

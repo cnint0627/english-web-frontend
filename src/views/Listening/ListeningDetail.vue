@@ -1,10 +1,10 @@
 <template>
-  <div class="listening-root-container">
-    <h1>{{ record.title }}</h1>
-    <div id="createTime">{{ record.createTime }}</div>
-    <audio ref="audioPlayer" :src="'http://localhost:9000/audios/'+record.audioPath" controls></audio>
-    <a-icon type="play" @click="handlePlayAudio"></a-icon>
-    <p id="content">
+  <a-card class="listening-root-container">
+    <div class="listening-content">
+    <div class="title">{{ record.title }}</div>
+    <div>{{ record.createTime }}</div>
+    <audio style="align-self: center;margin: 10px 0;" ref="audioPlayer" :src="'http://localhost:9000/audios/'+record.audioPath" controls></audio>
+    <p>
       <span v-for="(blank,index) in record.blanks" v-bind:key="blank">
         <span v-for="word in blank.content.split(' ')" v-bind:key="word">
           {{word}}
@@ -27,8 +27,11 @@
         </span>
       </span>
     </p>
-    <a-button v-if="record.blanks.length>0" id="button" @click="handleSubmitAnswer" :disabled="isSubmited">提交答案</a-button>
-  </div>
+    </div>
+    <div class="listening-question-bottom">
+    <a-button type="primary" style="height:50px" class="button" @click="handleSubmitAnswer" :disabled="isSubmited">提交答案</a-button>
+    </div>
+  </a-card>
 </template>
 
 <script>
@@ -105,45 +108,61 @@ export default {
       return myAnswerRecord.indexOf('')===-1
     },
 
-    // 播放/暂停音频
-    handlePlayAudio(){
-      if(this.isAudioPlaying){
-        this.$refs.audioPlayer.pause()
-      }else{
-        this.$refs.audioPlayer.play()
-      }
-      this.isAudioPlaying=!this.isAudioPlaying
-    }
   }
 };
 </script>
 
 <style>
-/* 添加一些样式以美化导航栏 */
+::-webkit-scrollbar{ width: 0px; }
+
 .listening-root-container{
-  width: 1000px;
+  width: 65vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  height: calc(100vh - 125px);
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
-#content{
-  width: 1000px;
+.title{
+  text-align: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-size: 40px;
+}
+
+.listening-content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   word-wrap: break-word;
   overflow-wrap: break-word;
   text-align: start;
   font-size: larger;
   line-height: 36px;
+  width: calc(65vw - 50px);
+  overflow-y: scroll;
+  position: absolute;
+  bottom:60px;
+  top:20px;
 }
 
 
 
-#button{
-  background-color: lightgreen;
+.listening-question-bottom{
+  background-color: aliceblue;
+  position: absolute;
+  height:60px;
+  bottom:0;
+  width: calc(65vw - 50px);
+  border-radius: 5px;
+}
+
+
+.button{
+  margin-top: 5px;
+  margin-right: 5px;
   float: right;
-  width: 120px;
-  margin-top: 20px;
-  margin-bottom: 100px;
+  width: 200px;
 }
 </style>
