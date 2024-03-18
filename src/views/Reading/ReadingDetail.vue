@@ -1,28 +1,43 @@
 <template>
-  <div id="root-container">
-  <h1>{{ record.title }}</h1>
-    <div id="createTime">{{ record.createTime }}</div>
-    <div id="content">{{ record.content }}</div>
-    <div id="question" v-for="(question,q_index) in record.questions" v-bind:key="question">
+  <div class="root-container">
+    <div class="reading-text">
+    <div class="title">{{ record.title }}</div>
+    <div class="createTime">{{ record.createTime }}</div>
+    <div class="content">{{ record.content }}</div>
+    </div>
+    <a-divider type="vertical" style="height:calc(100vh - 105px);width:0.1vw;margin-left:1vw;"></a-divider>
+    <div class="reading-question">
+      <div class="title">
+        Questions
+      </div>
+      <div class="question-mid">
+    <div class="question" v-for="(question,q_index) in record.questions" v-bind:key="question">
+      <div style="margin-bottom: 20px">
       问题 {{q_index+1}} : {{question.title}}
+      </div>
       <a-radio-group v-model="myAnswerRecord[q_index]" v-if="!isSubmited">
-        <div id="option" v-for="(option,o_index) in question.options" v-bind:key="option">
+        <div class="option" v-for="(option,o_index) in question.options" v-bind:key="option">
           <a-radio :value="o_index"/>选项 {{o_index+1}} : {{option.content}}
         </div>
       </a-radio-group>
       <a-radio-group v-model="myAnswerRecord[q_index]" v-if="isSubmited" readonly>
         <div
-            id="option"
+            class="option"
             v-for="(option,o_index) in question.options"
             v-bind:key="option"
             :style="(o_index==myAnswerRecord[q_index]?(submitAnswerRecord[q_index].isCorrect?'color:yellowgreen;':'color:red;'):'')+
                     (o_index==submitAnswerRecord[q_index].answer?'color:yellowgreen;':'')"
             >
-          <a-radio :value="o_index" onClick='javascript:return false'/>选项 {{o_index+1}} : {{option.content}}
+          <a-radio :value="o_index" onClick='javascript:return false'/>
+          选项 {{o_index+1}} : {{option.content}}
         </div>
       </a-radio-group>
     </div>
-    <a-button v-if="record.questions.length>0" id="button" @click="handleSubmitAnswer" :disabled="isSubmited">提交答案</a-button>
+    </div>
+      <div class="question-bottom">
+    <a-button v-if="record.questions.length>0" type="primary" style="height: 50px" class="button" @click="handleSubmitAnswer" :disabled="isSubmited">Submit</a-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -98,17 +113,39 @@ export default {
 </script>
 
 <style>
-/* 添加一些样式以美化导航栏 */
-#root-container{
-  width: 1000px;
+::-webkit-scrollbar{ width: 0px; }
+
+.root-container{
+  width: 95vw;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  height: calc(100vh - 125px);
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
-#content{
-  width: 1000px;
+.reading-text{
+  float: left;
+  margin-left:1vw;
+  width: 45vw;
+  overflow-y: scroll;
+}
+
+.reading-question{
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  width:45vw;
+  float: right;
+  margin-left: 1vw;
+}
+
+.title{
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-size: 40px;
+}
+
+.content{
   word-wrap: break-word;
   overflow-wrap: break-word;
   text-align: start;
@@ -116,33 +153,44 @@ export default {
   line-height: 36px;
 }
 
-#question{
+.question{
   display:flex;
   flex-direction: column;
   color:blue;
-  background-color: lightblue;
-  width:800px;
-  margin: 20px 0;
-  padding: 20px 0;
+  background-color: lightskyblue;
+  margin:30px 0;
+  border-radius: 20px;
+  padding: 30px 30px;
+  font-size: 20px;
 }
 
-#option{
-  display: flex;
-  flex-direction: row;
+.option{
+  margin:10px 0;
+  display: inline-block;
   color:black;
   align-items: start;
-  padding: 20px 40px;
   text-align: start;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  width: 100%;
+  line-height: 36px;
 }
 
+.question-bottom{
+  background-color: aliceblue;
+  position: absolute;
+  height:60px;
+  bottom:0;
+  width: 45vw;
+}
 
-#button{
-  background-color: lightgreen;
+.question-mid{
+  height: calc(100% - 115px);
+  overflow-y: scroll;
+}
+
+.button{
+  margin-top: 5px;
+  margin-right: 5px;
   float: right;
-  width: 120px;
-  margin-top: 20px;
-  margin-bottom: 100px;
+  width: 200px;
 }
 </style>

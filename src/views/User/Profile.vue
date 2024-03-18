@@ -4,6 +4,7 @@
     <h3>您好，{{user.username}}</h3>
     <h3>ID: {{user.id}}</h3>
     <button @click="handleReadingRecord">阅读历史记录</button>
+    <button @click="handleListeningRecord">听力历史记录</button>
   </div>
 </template>
 
@@ -19,7 +20,8 @@ export default {
 
       },
       url:{
-        getReadingRecord:"/user/getReadingRecord"
+        getReadingRecord:"/user/getRecord/reading",
+        getListeningRecord:"/user/getRecord/listening"
       }
     };
   },
@@ -35,38 +37,30 @@ export default {
           .then(res=>{
             console.log(res)
           })
+    },
+    handleListeningRecord(){
+      getAction(this.url.getListeningRecord)
+          .then(res=>{
+            console.log(res)
+          })
     }
   }
 };
 </script>
 
 <style>
-/* 添加一些样式以美化导航栏 */
-nav {
-  background-color: #f2f2f2;
-  padding: 10px;
+.root-container{
+  width: 50vw;
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 125px);
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
+.nav-left{
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
 }
-
-li {
-  display: inline-block;
-  margin-right: 10px;
-}
-
-a {
-  text-decoration: none;
-  color: #333;
-  padding: 5px;
-}
-
-/* 定义选中时的样式 */
-.active {
-  background-color: lightgreen;
-  color: #fff; /* 设置选中时的文字颜色 */
+.content{
+  width:100%;
 }
 </style>

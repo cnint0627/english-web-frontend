@@ -7,10 +7,10 @@
     <p id="content">
       <span v-for="(question,index) in record.questions" v-bind:key="question">
         {{question.content}}
-        <a-input v-if="record.questions[index].hasAnswer && !isSubmited" style="width: 180px" v-model="myAnswerRecord[index]" ></a-input>
-        <span v-if="record.questions[index].hasAnswer && isSubmited && submitAnswerRecord[index].isCorrect" style="width: 180px;color:lightgreen">{{myAnswerRecord[index]}}</span>
-        <s v-if="record.questions[index].hasAnswer && isSubmited && !submitAnswerRecord[index].isCorrect" style="width: 180px;color:red">{{myAnswerRecord[index]}}</s>
-        <span v-if="record.questions[index].hasAnswer && isSubmited && !submitAnswerRecord[index].isCorrect" style="width: 180px;color:lightskyblue">{{submitAnswerRecord[index].answer}}</span>
+        <a-input v-if="record.questions[index].hasBlank && !isSubmited" style="width: 180px" v-model="myAnswerRecord[index]" ></a-input>
+        <span v-if="record.questions[index].hasBlank && isSubmited && submitAnswerRecord[index].isCorrect" style="width: 180px;color:lightgreen">{{myAnswerRecord[index]}}</span>
+        <s v-if="record.questions[index].hasBlank && isSubmited && !submitAnswerRecord[index].isCorrect" style="width: 180px;color:red">{{myAnswerRecord[index]}}</s>
+        <span v-if="record.questions[index].hasBlank && isSubmited && !submitAnswerRecord[index].isCorrect" style="width: 180px;color:lightskyblue">{{submitAnswerRecord[index].answer}}</span>
 
       </span>
     </p>
@@ -50,8 +50,16 @@ export default {
           if(res.data) {
             this.record = res.data
             this.myAnswerRecord = new Array(this.record.questions.length).fill('')
-            if(!this.record.questions[this.record.questions.length-1].hasAnswer){
+            if(!this.record.questions[this.record.questions.length-1].hasBlank){
+              // 如果最后一个段落没有填空，则从我的回答记录中删除，这样页面渲染时就是正常的
               this.myAnswerRecord.splice(0,1)
+            }
+            this.submitAnswerRecord=res.data.records
+            if(this.submitAnswerRecord.length>0){
+              this.isSubmited=true
+              for(let index in this.submitAnswerRecord){
+                this.myAnswerRecord[index]=this.submitAnswerRecord[index].record
+              }
             }
           }else{
             // 听力不存在

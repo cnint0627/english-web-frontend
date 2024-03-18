@@ -5,7 +5,8 @@ import Reading from "@/views/Reading/ReadingList.vue";
 import ReadingDetail from "@/views/Reading/ReadingDetail.vue";
 import Listening from "@/views/Listening/ListeningList.vue"
 import Home from "@/views/Home.vue";
-import User from "@/views/User.vue"
+import User from "@/views/User/User.vue"
+import UserProfile from "@/views/User/Profile.vue"
 import {message} from "ant-design-vue";
 import Admin from "@/views/Admin/Admin.vue";
 import AdminReading from "@/views/Admin/ReadingList.vue"
@@ -61,7 +62,15 @@ let routes=[
     {
         path:"/user",
         component:User,
-        name:"/user"
+        name:"/user",
+        redirect: "/user/profile",
+        children:[
+            {
+                name:"/user",
+                path:"profile",
+                component:UserProfile
+            }
+        ]
     },
     {
         path:"/admin",
