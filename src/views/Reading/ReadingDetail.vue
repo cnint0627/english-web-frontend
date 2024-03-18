@@ -1,5 +1,5 @@
 <template>
-  <div class="root-container">
+  <div class="reading-root-container">
     <div class="reading-text">
     <div class="title">{{ record.title }}</div>
     <div class="createTime">{{ record.createTime }}</div>
@@ -115,7 +115,7 @@ export default {
 <style>
 ::-webkit-scrollbar{ width: 0px; }
 
-.root-container{
+.reading-root-container{
   width: 95vw;
   display: flex;
   flex-direction: row;
@@ -180,6 +180,7 @@ export default {
   height:60px;
   bottom:0;
   width: 45vw;
+  border-radius: 5px;
 }
 
 .question-mid{

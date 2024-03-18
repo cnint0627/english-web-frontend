@@ -7,10 +7,13 @@ import Listening from "@/views/Listening/ListeningList.vue"
 import Home from "@/views/Home.vue";
 import User from "@/views/User/User.vue"
 import UserProfile from "@/views/User/Profile.vue"
+import UserRecord from "@/views/User/Record.vue"
+import UserSetting from "@/views/User/Setting.vue"
 import {message} from "ant-design-vue";
 import Admin from "@/views/Admin/Admin.vue";
 import AdminReading from "@/views/Admin/ReadingList.vue"
 import AdminListening from "@/views/Admin/ListeningList.vue"
+import AdminWriting from "@/views/Admin/WritingList.vue"
 import loginCheck from "@/api/loginCheck";
 import ListeningDetail from "@/views/Listening/ListeningDetail.vue";
 import Writing from "@/views/Writing/WritingList.vue"
@@ -69,6 +72,16 @@ let routes=[
                 name:"/user",
                 path:"profile",
                 component:UserProfile
+            },
+            {
+                name:"/user",
+                path:"record",
+                component:UserRecord
+            },
+            {
+                name:"/user",
+                path:"setting",
+                component:UserSetting
             }
         ]
     },
@@ -85,6 +98,11 @@ let routes=[
     {
         path:"/admin/listening",
         component: AdminListening,
+        name:"/admin"
+    },
+    {
+        path:"/admin/writing",
+        component: AdminWriting,
         name:"/admin"
     },
     {

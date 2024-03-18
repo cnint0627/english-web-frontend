@@ -59,6 +59,7 @@
               <p class="content" v-if="isEditQuestion">
                 <span :style="'cursor: pointer;'+(blankList.indexOf(index)===-1?'':'color:lightgreen')" v-for="(word, index) in model.content" v-bind:key="word" @click="handleSetBlank(index)">
                   {{word}}
+                  <br v-if="word.charAt(word.length-1)==='\n'"/>
                 </span>
               </p>
             </a-form-model-item>
@@ -107,7 +108,7 @@ export default {
       model: {
         title: '',
         audioPath:'',
-        questions: [],
+        blanks: [],
         // 听力材料内容，后续会对其进行转化处理
         content:''
       },
@@ -143,6 +144,7 @@ export default {
 
           // 将挖空转化为模型
           this.parseBlankToModel();
+          console.log(this.model)
 
           // 上传音频文件
           postAction(this.url.upload, this.formData,{'Content-Type':'multipart/form-data'})
@@ -191,7 +193,9 @@ export default {
       this.$refs.form.validate(val => {
         if(val){
           this.isEditQuestion=true
+          this.model.content=this.model.content.replace(/\n/g,"\n ");
           this.model.content=this.model.content.split(" ")
+          console.log(this.model.content)
         }else{
           return false
         }
@@ -213,19 +217,19 @@ export default {
 
     // 对挖好空的模型进行转化
     parseBlankToModel(){
-      this.model.questions=[]
+      this.model.blanks=[]
       this.blankList.sort()
       let blankList=this.blankList
       let content=this.model.content
       for(let index in blankList){
-        this.model.questions.push(
+        this.model.blanks.push(
             {
               content:index===0?content.slice(0,blankList[index]).join(' '):content.slice(blankList[index-1]+1,blankList[index]).join(' '),
               answer:content[blankList[index]]
             }
         )
         if(index==blankList.length-1 && blankList[index]!=content.length-1){
-          this.model.questions.push(
+          this.model.blanks.push(
               {
                 content:content.slice(blankList[index]+1,content.length).join(' '),
                 answer:null
@@ -239,12 +243,12 @@ export default {
     // 将记录转化为挖空列表形式
     parseModelToBlank(){
       this.model.content=[]
-      for(let index in this.model.questions){
-        if(this.model.questions[index].content) {
-          this.model.content.push(...this.model.questions[index].content.split(' '))
+      for(let index in this.model.blanks){
+        if(this.model.blanks[index].content) {
+          this.model.content.push(...this.model.blanks[index].content.split(' '))
         }
-        if(this.model.questions[index].answer){
-          this.model.content.push(this.model.questions[index].answer)
+        if(this.model.blanks[index].answer){
+          this.model.content.push(this.model.blanks[index].answer)
           this.blankList.push(this.model.content.length-1)
         }
       }

@@ -1,20 +1,33 @@
 <template>
-  <div id="root-container">
+  <div class="listening-root-container">
     <h1>{{ record.title }}</h1>
     <div id="createTime">{{ record.createTime }}</div>
     <audio ref="audioPlayer" :src="'http://localhost:9000/audios/'+record.audioPath" controls></audio>
     <a-icon type="play" @click="handlePlayAudio"></a-icon>
     <p id="content">
-      <span v-for="(question,index) in record.questions" v-bind:key="question">
-        {{question.content}}
-        <a-input v-if="record.questions[index].hasBlank && !isSubmited" style="width: 180px" v-model="myAnswerRecord[index]" ></a-input>
-        <span v-if="record.questions[index].hasBlank && isSubmited && submitAnswerRecord[index].isCorrect" style="width: 180px;color:lightgreen">{{myAnswerRecord[index]}}</span>
-        <s v-if="record.questions[index].hasBlank && isSubmited && !submitAnswerRecord[index].isCorrect" style="width: 180px;color:red">{{myAnswerRecord[index]}}</s>
-        <span v-if="record.questions[index].hasBlank && isSubmited && !submitAnswerRecord[index].isCorrect" style="width: 180px;color:lightskyblue">{{submitAnswerRecord[index].answer}}</span>
-
+      <span v-for="(blank,index) in record.blanks" v-bind:key="blank">
+        <span v-for="word in blank.content.split(' ')" v-bind:key="word">
+          {{word}}
+          <br v-if="word && word.charAt(word.length-1)==='\n'"/>
+        </span>
+        <a-input v-if="record.blanks[index].hasBlank && !isSubmited" style="width: 180px" v-model="myAnswerRecord[index]" :placeholder="index+1"></a-input>
+        <br v-if="blank.answer && !isSubmited"/>
+        <span v-if="isSubmited">
+          <span v-if="record.blanks[index].hasBlank && submitAnswerRecord[index].isCorrect" style="width: 180px;color:lightgreen">
+            {{myAnswerRecord[index]}}
+            <br v-if="submitAnswerRecord[index].answer && submitAnswerRecord[index].answer.charAt(submitAnswerRecord[index].answer.length-1)==='\n'"/>
+          </span>
+          <s v-if="record.blanks[index].hasBlank && !submitAnswerRecord[index].isCorrect" style="width: 180px;color:red">
+            {{myAnswerRecord[index]}}
+          </s>
+          <span v-if="record.blanks[index].hasBlank && !submitAnswerRecord[index].isCorrect" style="width: 180px;color:lightskyblue">
+            {{submitAnswerRecord[index].answer}}
+            <br v-if="submitAnswerRecord[index].answer && submitAnswerRecord[index].answer.charAt(submitAnswerRecord[index].answer.length-1)==='\n'"/>
+          </span>
+        </span>
       </span>
     </p>
-    <a-button v-if="record.questions.length>0" id="button" @click="handleSubmitAnswer" :disabled="isSubmited">提交答案</a-button>
+    <a-button v-if="record.blanks.length>0" id="button" @click="handleSubmitAnswer" :disabled="isSubmited">提交答案</a-button>
   </div>
 </template>
 
@@ -23,7 +36,7 @@ import {getAction, postAction} from "@/api/action";
 import {message} from "ant-design-vue";
 
 export default {
-  name: "ReadingDetail",
+  name: "ListeningDetail",
   data() {
     return {
       // 文章记录
@@ -49,8 +62,8 @@ export default {
           console.log(res)
           if(res.data) {
             this.record = res.data
-            this.myAnswerRecord = new Array(this.record.questions.length).fill('')
-            if(!this.record.questions[this.record.questions.length-1].hasBlank){
+            this.myAnswerRecord = new Array(this.record.blanks.length).fill('')
+            if(!this.record.blanks[this.record.blanks.length-1].hasBlank){
               // 如果最后一个段落没有填空，则从我的回答记录中删除，这样页面渲染时就是正常的
               this.myAnswerRecord.splice(0,1)
             }
@@ -107,7 +120,7 @@ export default {
 
 <style>
 /* 添加一些样式以美化导航栏 */
-#root-container{
+.listening-root-container{
   width: 1000px;
   display: flex;
   flex-direction: column;

@@ -1,16 +1,14 @@
 <template>
   <div>
-    <h1>这是网页的User页</h1>
-    <h3>您好，{{user.username}}</h3>
+    <h1>您好，{{user.username}}</h1>
     <h3>ID: {{user.id}}</h3>
-    <button @click="handleReadingRecord">阅读历史记录</button>
-    <button @click="handleListeningRecord">听力历史记录</button>
+    <h3>这是您加入本站的第 {{user.createTime?Math.floor(Math.abs(Date.now() - Date.parse(user.createTime))  / (1000 * 3600 * 24)):'0'}} 天</h3>
   </div>
 </template>
 
 <script>
+
 import loginCheck from "@/api/loginCheck";
-import {getAction} from "@/api/action";
 
 export default {
   name: "User",
@@ -20,8 +18,7 @@ export default {
 
       },
       url:{
-        getReadingRecord:"/user/getRecord/reading",
-        getListeningRecord:"/user/getRecord/listening"
+
       }
     };
   },
@@ -32,18 +29,7 @@ export default {
         })
   },
   methods:{
-    handleReadingRecord(){
-      getAction(this.url.getReadingRecord)
-          .then(res=>{
-            console.log(res)
-          })
-    },
-    handleListeningRecord(){
-      getAction(this.url.getListeningRecord)
-          .then(res=>{
-            console.log(res)
-          })
-    }
+
   }
 };
 </script>

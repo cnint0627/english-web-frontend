@@ -1,14 +1,25 @@
 <template>
-  <div class="root-container">
+  <div class="user-root-container">
     <div class="nav-left">
-      <a-menu :openKeys="openKeys" :selectedKeys="selectedKeys" mode="inline" theme="dark">
-        <a-sub-menu key="1">
-          <template #icon><pull-request-outlined /></template>
-          <template #title>sub1</template>
-          <a-menu-item key="1.1"><template #icon><PieChartOutlined /></template><i>option 1.1</i></a-menu-item>
-        </a-sub-menu>
-        <a-menu-item key="2"><template #icon><PieChartOutlined /></template><i>option 2</i></a-menu-item>
-      </a-menu>
+        <a-menu
+                mode="inline"
+                @click="handleClickMenu"
+                :selectedKeys="[$route.path]"
+        >
+
+          <a-menu-item key='/profile' :class="activeRoute === '/user/profile'?'active-menu':'non-active-menu'">
+            <a-icon type="user" />
+            <span>个人资料</span>
+          </a-menu-item>
+          <a-menu-item key='/record' :class="activeRoute === '/user/record'?'active-menu':'non-active-menu'">
+            <a-icon type="history" />
+            <span>提交记录</span>
+          </a-menu-item>
+          <a-menu-item key='/setting' :class="activeRoute === '/user/setting'?'active-menu':'non-active-menu'">
+            <a-icon type="setting" />
+            <span>设置</span>
+          </a-menu-item>
+        </a-menu>
     </div>
     <div class="content">
       <router-view></router-view>
@@ -17,9 +28,6 @@
 </template>
 
 <script>
-import loginCheck from "@/api/loginCheck";
-import {getAction} from "@/api/action";
-
 export default {
   name: "User",
   data() {
@@ -32,34 +40,29 @@ export default {
         getListeningRecord:"/user/getRecord/listening"
       },
       openKeys:[],
-      selectedKeys:[]
+      selectedKeys:[],
+      activeRoute:'',
     };
   },
   created() {
-    loginCheck()
-        .then(res=>{
-          this.user=res.data
-        })
+    this.activeRoute = this.$route.path;
+    this.$router.afterEach((to) => {
+      this.activeRoute = to.path;
+    });
   },
   methods:{
-    handleReadingRecord(){
-      getAction(this.url.getReadingRecord)
-          .then(res=>{
-            console.log(res)
-          })
-    },
-    handleListeningRecord(){
-      getAction(this.url.getListeningRecord)
-          .then(res=>{
-            console.log(res)
-          })
+    handleClickMenu(e){
+      if(this.$route.path!=="/user"+e.key) {
+        this.$router.push({path: "/user" + e.key})
+      }
     }
+
   }
 };
 </script>
 
 <style>
-.root-container{
+.user-root-container{
   width: 50vw;
   display: flex;
   flex-direction: row;
@@ -68,9 +71,19 @@ export default {
   overflow-x: hidden;
 }
 .nav-left{
-
+  width:12vw;
 }
 .content{
   width:100%;
 }
+
+.non-active-menu{
+  color: black !important;
+}
+
+.active-menu{
+  color:white !important;
+  background-color: #0095ff;
+}
+
 </style>
