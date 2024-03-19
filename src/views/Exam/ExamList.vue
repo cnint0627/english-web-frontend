@@ -43,6 +43,14 @@ export default {
           align: 'center',
           dataIndex: 'createTime',
           key: 'createTime'
+        },
+        {
+          title: '已完成',
+          width: 200,
+          align: 'center',
+          customRender:(t,r,)=>{
+            return r.isCompleted?"是":""
+          },
         }
       ],
       pagination:{

@@ -125,6 +125,7 @@ export default {
     handleEdit(record){
       getAction(this.url.getAllById+"?id="+record.id)
           .then(res=>{
+            console.log(res.data)
             this.$refs.modalForm.model= JSON.parse(JSON.stringify(res.data))
             this.$refs.modalForm.blankList=[]
             this.$refs.modalForm.fileList = [

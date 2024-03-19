@@ -2,7 +2,7 @@
   <div>
     <h1>您好，{{user.username}}</h1>
     <h3>ID: {{user.id}}</h3>
-    <h3>这是您加入本站的第 {{user.createTime!="null"?Math.floor(Math.abs(Date.now() - Date.parse(user.createTime))  / (1000 * 3600 * 24)):'0'}} 天</h3>
+    <h3>这是您加入本站的第 {{user.createTime?(user.createTime!="null"?Math.floor(Math.abs(Date.now() - Date.parse(user.createTime))  / (1000 * 3600 * 24)):'0'):'0'}} 天</h3>
   </div>
 </template>
 

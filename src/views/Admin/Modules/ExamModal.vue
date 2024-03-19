@@ -38,8 +38,8 @@
                   :rules="[
                     {required: true, message: '请选择材料类型！'},
                   ]"
-                  :label-col="labelCol"
-                  :wrapper-col="wrapperCol"
+                  :label-col="{span:6}"
+                  :wrapper-col="{span:18}"
               >
                 <a-select v-model="material.type" @change="handleTypeChange(material)">
                   <a-select-option value=""> 请选择 </a-select-option>
@@ -57,8 +57,8 @@
                   :rules="[
                     {required: true, message: '请选择材料！'},
                   ]"
-                  :label-col="labelCol"
-                  :wrapper-col="wrapperCol"
+                  :label-col="{span:6}"
+                  :wrapper-col="{span:18}"
               >
                 <a-select v-model="material.materialId">
                   <a-select-option v-for="(item,index) in materialList[material.type]" v-bind:key="index" :value="item.id"> {{item.id}} {{item.title}} </a-select-option>
@@ -66,6 +66,7 @@
 
               </a-form-model-item>
             </a-col>
+            <a-button id="q-button" style="background-color: red" @click="handleDeleteMaterial(index)">删除材料</a-button>
           </a-card>
         </a-row>
         <a-button id="q-button" @click="handleAddMaterial">新增材料</a-button>
@@ -146,6 +147,10 @@ export default {
       console.log(this.model)
       this.$refs.form.validate(val => {
         if(val) {
+          if(this.model.materials.length==0){
+            message.error("至少选择一个材料进行组卷",1)
+            return
+          }
           this.confirmLoading = true
           if(this.formAction=='add') {
             postAction(this.url.add, this.model)
@@ -192,25 +197,13 @@ export default {
       console.log(this.model)
     },
 
-    // 新增选项
-    handleAddOption(index){
-      this.model.questions[index].options.push(
-          {
-            content:''
-          }
-      )
+
+    // 删除材料
+    handleDeleteMaterial(index){
+      this.model.materials.splice(index,1)
     },
 
-    // 删除题目
-    handleDeleteQuestion(index){
-      this.model.questions.splice(index,1)
-    },
-
-    // 删除选项
-    handleDeleteOption(q_index,o_index){
-      this.model.questions[q_index].options.splice(o_index,1)
-    },
-
+    // 更改材料类型时将已选择的材料清除
     handleTypeChange(material){
       material.materialId=''
     }

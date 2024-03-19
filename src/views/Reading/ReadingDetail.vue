@@ -107,7 +107,9 @@ export default {
       if(this.validateAnswer(this.myAnswerRecord)) {
         postAction(this.url.submitAnswer + "?id=" + this.record.id, this.myAnswerRecord)
             .then(res => {
-              message.success("提交成功",1)
+              if(!this.isExam) {
+                message.success("提交成功", 1)
+              }
               console.log(res)
               this.submitAnswerRecord=res.data
               this.isSubmited=true
