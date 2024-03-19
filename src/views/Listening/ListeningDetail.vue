@@ -65,7 +65,8 @@ export default {
   name: "ListeningDetail",
   props:{
     id: String,
-    isExam: Boolean(false)
+    isExam: Boolean(false),
+    isExamCompleted: Boolean(false)
   },
   data() {
     return {
@@ -89,6 +90,7 @@ export default {
     if(this.id){
       // 如果组件传参，传了id就用父组件传过来的id
       console.log("this is from a exam")
+      console.log("exam completed:",this.isExamCompleted)
       this.$route.params.id=this.id
     }
     // 初始化听力内容及题目
@@ -103,7 +105,7 @@ export default {
               // 如果最后一个段落没有填空，则从我的回答记录中删除，这样页面渲染时就是正常的
               this.myBlankRecord.splice(0,1)
             }
-            if(!this.isExam) {
+            if(!this.isExam || this.isExamCompleted) {
               this.submitAnswerRecord = res.data.records
               if (this.submitAnswerRecord.length > 0) {
                 this.isSubmited = true

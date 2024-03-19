@@ -1,16 +1,16 @@
 <template>
   <div class="reading-root-container">
-    <div class="reading-text">
+    <div class="reading-text" :style="isExam?'height: calc(100% - 135px);overflow-y: scroll;':''">
       <div class="title">{{ record.title }}</div>
       <div class="createTime">{{ record.createTime }}</div>
       <div class="content">{{ record.content }}</div>
     </div>
-    <a-divider type="vertical" style="height:calc(100vh - 105px);width:0.1vw;margin-left:1vw;"></a-divider>
+    <a-divider type="vertical" :style="'height:calc(100vh - '+(isExam?255:0)+'px);width:0.1vw;margin-left:1vw;'"></a-divider>
     <div class="reading-question">
       <div class="title">
         My Writing
       </div>
-      <div class="question-mid">
+      <div class="reading-question-mid" :style="isExam?'height: calc(100% - 180px);':''">
         <a-textarea :readonly="isSubmited" v-model="myAnswerRecord" style="margin:5% 0;height: 90%"/>
       </div>
       <div class="question-bottom">
@@ -27,7 +27,9 @@ import {message} from "ant-design-vue";
 export default {
   name: "WritingDetail",
   props:{
-    id: String
+    id: String,
+    isExam: Boolean(false),
+    isExamCompleted: Boolean(false)
   },
   data() {
     return {
@@ -55,9 +57,11 @@ export default {
           console.log(res)
           if(res.data) {
             this.record = res.data
-            if(this.record.records.length>0){
-              this.myAnswerRecord=this.record.records[0].record
-              this.isSubmited=true
+            if(!this.isExam || this.isExamCompleted) {
+              if (this.record.records.length > 0) {
+                this.myAnswerRecord = this.record.records[0].record
+                this.isSubmited = true
+              }
             }
           }else{
             // 文章不存在

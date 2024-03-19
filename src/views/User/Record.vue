@@ -15,6 +15,7 @@
         </a-card>
       </a-tab-pane>
       <a-tab-pane
+          style="overflow-y: scroll;height:calc(100vh - 230px)"
           key="listening"
           :force-render="true"
           tab="听力">

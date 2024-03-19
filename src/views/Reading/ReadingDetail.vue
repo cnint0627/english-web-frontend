@@ -10,7 +10,7 @@
       <div class="title">
         Questions
       </div>
-      <div class="reading-question-mid">
+      <div class="reading-question-mid" :style="isExam?'height: calc(100% - 180px);':''">
     <div class="question" v-for="(question,q_index) in record.questions" v-bind:key="question">
       <div style="margin-bottom: 20px">
       问题 {{q_index+1}} : {{question.title}}
@@ -48,7 +48,8 @@ export default {
   name: "ReadingDetail",
   props: {
     id: String,
-    isExam: Boolean(false)
+    isExam: Boolean(false),
+    isExamCompleted: Boolean(false)
   },
   data() {
     return {
@@ -80,7 +81,7 @@ export default {
           if(res.data) {
             this.record = res.data
             this.myAnswerRecord = new Array(this.record.questions.length).fill(-1)
-            if(!this.isExam) {
+            if(!this.isExam || this.isExamCompleted) {
               // 如果是通过组卷打开的该题目，要清空题目答题状态
               this.submitAnswerRecord = res.data.records
               if (this.submitAnswerRecord.length > 0) {
