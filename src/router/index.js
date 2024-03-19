@@ -14,11 +14,14 @@ import Admin from "@/views/Admin/Admin.vue";
 import AdminReading from "@/views/Admin/ReadingList.vue"
 import AdminListening from "@/views/Admin/ListeningList.vue"
 import AdminWriting from "@/views/Admin/WritingList.vue"
+import AdminExam from "@/views/Admin/ExamList.vue"
 import loginCheck from "@/api/loginCheck";
 import ListeningDetail from "@/views/Listening/ListeningDetail.vue";
 import Writing from "@/views/Writing/WritingList.vue"
 import WritingDetail from "@/views/Writing/WritingDetail.vue";
 import mapState from "@/store";
+import ExamDetail from "@/views/Exam/ExamDetail.vue";
+import Exam from "@/views/Exam/ExamList.vue";
 
 
 let routes=[
@@ -56,6 +59,16 @@ let routes=[
         path:"/writing/:id",
         component: WritingDetail,
         name:"/writing"
+    },
+    {
+        path:"/exam",
+        component: Exam,
+        name:"/exam"
+    },
+    {
+        path:"/exam/:id",
+        component: ExamDetail,
+        name:"/exam"
     },
     {
         path:"/home",
@@ -103,6 +116,11 @@ let routes=[
     {
         path:"/admin/writing",
         component: AdminWriting,
+        name:"/admin"
+    },
+    {
+        path:"/admin/exam",
+        component: AdminExam,
         name:"/admin"
     },
     {

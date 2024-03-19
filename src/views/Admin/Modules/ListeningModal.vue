@@ -149,11 +149,11 @@ export default {
       isEditQuestion: false,
       validatorRules: {
         title: [
-          {required: true, message: '请输入文章标题！'},
+          {required: true, message: '请输入材料标题！'},
           {min: 0, max: 300, message: '长度不超过 300 个字符', trigger: 'change'},
         ],
         content: [
-          {required: true, message: '请输入文章内容！'},
+          {required: true, message: '请输入材料内容！'},
         ],
       },
       // 挖空的列表

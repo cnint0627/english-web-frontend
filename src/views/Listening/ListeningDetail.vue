@@ -1,6 +1,6 @@
 <template>
-  <a-card class="listening-root-container">
-    <div class="listening-content">
+  <div :style="isExam?'margin-left: 15vw':''" class="listening-root-container">
+    <div class="listening-content" :style="'top:'+(isExam?'60px':'20px')">
     <div class="title">{{ record.title }}</div>
     <div>{{ record.createTime }}</div>
     <audio style="align-self: center;margin: 10px 0;" ref="audioPlayer" :src="'http://localhost:9000/audios/'+record.audioPath" controls></audio>
@@ -53,9 +53,9 @@
       <!-- 选择题部分结束 -->
     </div>
     <div class="listening-question-bottom">
-    <a-button type="primary" style="height:50px" class="button" @click="handleSubmitAnswer" :disabled="isSubmited">提交答案</a-button>
+    <a-button v-if="!isExam" type="primary" style="height:50px" class="button" @click="handleSubmitAnswer" :disabled="isSubmited">提交答案</a-button>
     </div>
-  </a-card>
+  </div>
 </template>
 
 <script>
@@ -63,6 +63,10 @@ import {getAction, postAction} from "@/api/action";
 import {message} from "ant-design-vue";
 export default {
   name: "ListeningDetail",
+  props:{
+    id: String,
+    isExam: Boolean(false)
+  },
   data() {
     return {
       // 文章记录
@@ -82,6 +86,11 @@ export default {
     };
   },
   created() {
+    if(this.id){
+      // 如果组件传参，传了id就用父组件传过来的id
+      console.log("this is from a exam")
+      this.$route.params.id=this.id
+    }
     // 初始化听力内容及题目
     getAction(this.url.getById+"?id="+this.$route.params.id)
         .then(res=>{
@@ -94,20 +103,22 @@ export default {
               // 如果最后一个段落没有填空，则从我的回答记录中删除，这样页面渲染时就是正常的
               this.myBlankRecord.splice(0,1)
             }
-            this.submitAnswerRecord=res.data.records
-            if(this.submitAnswerRecord.length>0){
-              this.isSubmited=true
-              let i = 0
-              for(let index in this.submitAnswerRecord){
-                if(index<this.myBlankRecord.length) {
-                  this.myBlankRecord[index] = this.submitAnswerRecord[index].record
-                }else{
-                  this.myQuestionRecord[i]=parseInt(this.submitAnswerRecord[index].record)
-                  i+=1
+            if(!this.isExam) {
+              this.submitAnswerRecord = res.data.records
+              if (this.submitAnswerRecord.length > 0) {
+                this.isSubmited = true
+                let i = 0
+                for (let index in this.submitAnswerRecord) {
+                  if (index < this.myBlankRecord.length) {
+                    this.myBlankRecord[index] = this.submitAnswerRecord[index].record
+                  } else {
+                    this.myQuestionRecord[i] = parseInt(this.submitAnswerRecord[index].record)
+                    i += 1
+                  }
                 }
               }
-              console.log(this.myQuestionRecord)
             }
+            console.log(this.myQuestionRecord)
           }else{
             // 听力不存在
             this.record = {
@@ -177,7 +188,6 @@ export default {
   overflow-y: scroll;
   position: absolute;
   bottom:60px;
-  top:20px;
 }
 
 

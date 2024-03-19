@@ -26,6 +26,9 @@ import {message} from "ant-design-vue";
 
 export default {
   name: "WritingDetail",
+  props:{
+    id: String
+  },
   data() {
     return {
       // 文章记录
@@ -41,6 +44,11 @@ export default {
     };
   },
   created() {
+    if(this.id){
+      // 如果组件传参，传了id就用父组件传过来的id
+      console.log("this is from a exam")
+      this.$route.params.id=this.id
+    }
     // 初始化文章内容及题目
     getAction(this.url.getById+"?id="+this.$route.params.id)
         .then(res=>{

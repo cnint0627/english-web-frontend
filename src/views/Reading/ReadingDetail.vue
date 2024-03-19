@@ -1,11 +1,11 @@
 <template>
   <div class="reading-root-container">
-    <div class="reading-text">
+    <div class="reading-text" :style="isExam?'height: calc(100% - 135px);overflow-y: scroll;':''">
     <div class="title">{{ record.title }}</div>
     <div class="createTime">{{ record.createTime }}</div>
     <div class="content">{{ record.content }}</div>
     </div>
-    <a-divider type="vertical" style="height:calc(100vh - 105px);width:0.1vw;margin-left:1vw;"></a-divider>
+    <a-divider type="vertical" :style="'height:calc(100vh - '+(isExam?255:0)+'px);width:0.1vw;margin-left:1vw;'"></a-divider>
     <div class="reading-question">
       <div class="title">
         Questions
@@ -35,7 +35,7 @@
     </div>
     </div>
       <div class="reading-question-bottom">
-    <a-button type="primary" style="height: 50px" class="button" @click="handleSubmitAnswer" :disabled="isSubmited">Submit</a-button>
+    <a-button v-if="!isExam" type="primary" style="height: 50px" class="button" @click="handleSubmitAnswer" :disabled="isSubmited">Submit</a-button>
       </div>
     </div>
   </div>
@@ -44,9 +44,12 @@
 <script>
 import {getAction, postAction} from "@/api/action";
 import {message} from "ant-design-vue";
-
 export default {
   name: "ReadingDetail",
+  props: {
+    id: String,
+    isExam: Boolean(false)
+  },
   data() {
     return {
       // 文章记录
@@ -64,6 +67,12 @@ export default {
     };
   },
   created() {
+    if(this.id){
+      // 如果组件传参，传了id就用父组件传过来的id
+      console.log("this is from a exam")
+      this.$route.params.id=this.id
+    }
+    console.log("isExam:",this.isExam)
     // 初始化文章内容及题目
     getAction(this.url.getById+"?id="+this.$route.params.id)
         .then(res=>{
@@ -71,11 +80,14 @@ export default {
           if(res.data) {
             this.record = res.data
             this.myAnswerRecord = new Array(this.record.questions.length).fill(-1)
-            this.submitAnswerRecord=res.data.records
-            if(this.submitAnswerRecord.length>0){
-              this.isSubmited=true
-              for(let index in this.submitAnswerRecord){
-                this.myAnswerRecord[index]=parseInt(this.submitAnswerRecord[index].record)
+            if(!this.isExam) {
+              // 如果是通过组卷打开的该题目，要清空题目答题状态
+              this.submitAnswerRecord = res.data.records
+              if (this.submitAnswerRecord.length > 0) {
+                this.isSubmited = true
+                for (let index in this.submitAnswerRecord) {
+                  this.myAnswerRecord[index] = parseInt(this.submitAnswerRecord[index].record)
+                }
               }
             }
             console.log(this.myAnswerRecord)

@@ -5,6 +5,7 @@
       <li :class="{ active: activeRoute === '/reading' }"><router-link to="/reading">阅读</router-link></li>
       <li :class="{ active: activeRoute === '/listening' }"><router-link to="/listening">听力</router-link></li>
       <li :class="{ active: activeRoute === '/writing' }"><router-link to="/writing">写作</router-link></li>
+      <li :class="{ active: activeRoute === '/exam' }"><router-link to="/exam">组卷</router-link></li>
       <li style="position:absolute;right: 120px;margin-right: 0" v-if="isLogin" :class="{ active: activeRoute === '/user' }"><router-link to="/user">我的</router-link></li>
       <li style="position:absolute;right: 60px;margin-right: 0" v-if="!isLogin" :class="{ active: activeRoute === '/login' }"><router-link to="/login">登录</router-link></li>
       <a-popconfirm id="login" v-if="isLogin" title="确认登出吗?" ok-text="确认" cancel-text="取消" size="mini" @confirm="handleLogout">登出</a-popconfirm>

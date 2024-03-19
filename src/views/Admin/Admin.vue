@@ -4,6 +4,7 @@
     <a-button><router-link to="/admin/reading">阅读管理</router-link></a-button>
     <a-button><router-link to="/admin/listening">听力管理</router-link></a-button>
     <a-button><router-link to="/admin/writing">写作管理</router-link></a-button>
+    <a-button><router-link to="/admin/exam">组卷管理</router-link></a-button>
   </div>
 </template>
 
